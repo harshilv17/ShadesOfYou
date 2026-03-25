@@ -146,3 +146,73 @@ const COLLECTIONS = {
     tag2: 'All',
   },
 };
+
+// ── Routing ──
+function goHome() {
+  document.getElementById('page-home').classList.add('active');
+  document.getElementById('page-collection').classList.remove('active');
+  document.getElementById('siteNav').classList.remove('nav--inner');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showCollection(key) {
+  const coll = COLLECTIONS[key];
+  const products = PRODUCTS.filter(p => p.tags.includes(key));
+
+  // Hero
+  document.getElementById('collHeroPhoto').style.backgroundImage = `url('${coll.heroImg}')`;
+  document.getElementById('collHeroTag').textContent = coll.tag;
+  document.getElementById('collHeroTitle').innerHTML = coll.title;
+  document.getElementById('collHeroSub').textContent = coll.sub;
+
+  // Count
+  document.getElementById('collCount').textContent = products.length;
+
+  // Filters
+  const filtersEl = document.getElementById('collFilters');
+  filtersEl.innerHTML = coll.filters.map((f, i) =>
+    `<button class="coll-filter${i===0?' active':''}" onclick="filterProducts('${key}', this)">${f}</button>`
+  ).join('');
+
+  // Products
+  renderProducts(products);
+
+  // Switch pages
+  document.getElementById('page-home').classList.remove('active');
+  document.getElementById('page-collection').classList.add('active');
+  document.getElementById('siteNav').classList.add('nav--inner');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function filterProducts(collKey, btn) {
+  // Update active state
+  btn.closest('.coll-filter-row').querySelectorAll('.coll-filter')
+    .forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  // Re-render (in a real Shopify build this would filter by tag/variant)
+  const products = PRODUCTS.filter(p => p.tags.includes(collKey));
+  renderProducts(products);
+}
+
+function renderProducts(products) {
+  const grid = document.getElementById('prodGrid');
+  document.getElementById('collCount').textContent = products.length;
+
+  grid.innerHTML = products.map(p => `
+    <a class="prod-card" href="${p.href}" target="_blank" rel="noopener">
+      <div class="prod-card__img">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" />
+        ${p.mrp ? '<span class="prod-card__badge">Sale</span>' : ''}
+        <div class="prod-card__overlay">
+          <button class="prod-card__quickadd" onclick="event.preventDefault()">Quick Add</button>
+        </div>
+      </div>
+      <p class="prod-card__name">${p.name}</p>
+      <p class="prod-card__price">
+        ${p.mrp ? `<s>₹${p.mrp.toLocaleString('en-IN')}</s>` : ''}
+        <strong>₹${p.price.toLocaleString('en-IN')}</strong>
+      </p>
+    </a>
+  `).join('');
+}
