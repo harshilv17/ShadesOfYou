@@ -11,6 +11,25 @@
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════
+     SHARED NAV
+══════════════════════════════════════════ -->
+<nav class="nav" id="siteNav">
+  <span class="nav__logo" onclick="goHome()">Shades <span>of</span> You</span>
+  <div class="nav__links">
+    <a onclick="showCollection('workday')">Work Day</a>
+    <a onclick="showCollection('festive')">Festive</a>
+    <a onclick="showCollection('weekend')">Weekend</a>
+    <a onclick="showCollection('all')">Shop All</a>
+  </div>
+  <button class="nav__back" id="navBack" onclick="goHome()">
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+      <path d="M13 5H1M5 9L1 5L5 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Back
+  </button>
+</nav>
+
   <script src="script.js"></script>
 </body>
 </html>
