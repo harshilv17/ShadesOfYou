@@ -383,3 +383,25 @@ body {
   .coll-hero__text { padding: 0 24px 24px; }
   .coll-filter-row { display: none; }
 }
+
+/* ══════════════════════════════════════════════
+   FOOTER (shared)
+══════════════════════════════════════════════ */
+.site-footer {
+  background: #1E1A16; color: rgba(255,255,255,0.55);
+  padding: 44px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 16px;
+}
+.site-footer__logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 300; letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.8);
+}
+.site-footer__logo em { font-style: italic; color: #E8C9A0; }
+.site-footer__note {
+  font-size: 11px; font-weight: 300; letter-spacing: 0.06em;
+}
+@media(max-width:600px){
+  .site-footer { flex-direction: column; gap: 12px; padding: 32px 20px; text-align: center; }
+}
