@@ -72,3 +72,46 @@ body {
 @media(max-width:480px){
   .nav__links { display: none; }
 }
+
+/* ══════════════════════════════════════════════
+   HOME PAGE — Occasion Edit Section
+══════════════════════════════════════════════ */
+.occasion {
+  max-width: 1360px; margin: 0 auto;
+  padding: 72px 48px 88px;
+}
+
+/* Header */
+.occasion__header {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 44px; gap: 24px;
+}
+.occasion__eyebrow {
+  font-size: 10px; font-weight: 500;
+  letter-spacing: 0.26em; text-transform: uppercase;
+  color: var(--rust); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.occasion__eyebrow::before {
+  content:''; display:block;
+  width:28px; height:1px; background:var(--rust);
+}
+.occasion__title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(36px,5vw,60px);
+  font-weight: 300; line-height: 1.05;
+}
+.occasion__title em { font-style:italic; color:var(--rust-l); }
+.occasion__sub {
+  font-size: 13px; font-weight: 300; color: var(--dim);
+  line-height: 1.7; max-width: 260px; text-align: right;
+}
+
+/* Grid */
+.occasion__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-rows: 540px;
+  gap: 12px;
+}
