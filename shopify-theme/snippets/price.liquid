@@ -1,0 +1,20 @@
+{% doc %}
+  Renders the price display for a product or variant.
+
+  @param {product} product - The product object
+  @param {variant} [selected_variant] - The selected variant (defaults to first available)
+{% enddoc %}
+
+{%- assign target_variant = selected_variant | default: product.selected_or_first_available_variant -%}
+
+<div class="price{% if target_variant.compare_at_price > target_variant.price %} price--on-sale{% endif %}">
+  {%- if product.price_varies -%}
+    <span class="price__from">{{ 'products.product.from' | t }}</span>
+  {%- endif -%}
+
+  {%- if target_variant.compare_at_price > target_variant.price -%}
+    <s class="price__compare">{{ target_variant.compare_at_price | money }}</s>
+  {%- endif -%}
+
+  <span class="price__current">{{ target_variant.price | money }}</span>
+</div>

@@ -1,0 +1,92 @@
+<section class="main-cart section-{{ section.id }}">
+  <div class="page-width">
+    <h1 class="main-cart__title">{{ 'cart.general.title' | t }}</h1>
+
+    {%- if cart.item_count > 0 -%}
+      {%- form 'cart', cart, id: 'CartForm', data-cart-form: '' -%}
+        <div class="main-cart__layout">
+          <div class="main-cart__items">
+            {%- for item in cart.items -%}
+              <div class="cart-item" data-cart-item="{{ item.key }}">
+                <a href="{{ item.url }}" class="cart-item__image-link">
+                  {{
+                    item.image
+                    | image_url: width: 200
+                    | image_tag: alt: item.title, loading: 'lazy', class: 'cart-item__img'
+                  }}
+                </a>
+                <div class="cart-item__info">
+                  <p class="cart-item__vendor">{{ item.product.vendor }}</p>
+                  <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                  {%- unless item.product.has_only_default_variant -%}
+                    <p class="cart-item__variant">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  {%- render 'price', product: item.product, selected_variant: item.variant -%}
+
+                  <div class="cart-item__actions">
+                    <div class="quantity-selector">
+                      <button type="button" class="quantity-btn" data-qty-decrement>−</button>
+                      <input
+                        type="number"
+                        name="updates[]"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        class="quantity-input"
+                        data-qty-input
+                        data-cart-item-key="{{ item.key }}"
+                      >
+                      <button type="button" class="quantity-btn" data-qty-increment>+</button>
+                    </div>
+                    <a
+                      href="{{ routes.cart_change_url }}?id={{ item.key }}&quantity=0"
+                      class="cart-item__remove"
+                      aria-label="{{ 'cart.general.remove' | t }}"
+                      data-remove-item
+                    >
+                      {{ 'cart.general.remove' | t }}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          <div class="main-cart__summary">
+            <p class="main-cart__subtotal-label">{{ 'cart.general.subtotal' | t }}</p>
+            <p class="main-cart__subtotal-amount">{{ cart.total_price | money }}</p>
+            <p class="main-cart__note">{{ 'cart.general.taxes_and_shipping' | t }}</p>
+            <button type="submit" name="checkout" class="btn btn--primary btn--full">
+              {{ 'cart.general.checkout' | t }}
+            </button>
+            <a href="{{ routes.root_url }}" class="main-cart__continue">
+              {{ 'cart.general.continue_shopping' | t }}
+            </a>
+          </div>
+        </div>
+      {%- endform -%}
+
+    {%- else -%}
+      <div class="main-cart__empty">
+        <p>{{ 'cart.general.empty' | t }}</p>
+        <a href="{{ routes.root_url }}" class="btn btn--primary">
+          {{ 'cart.general.continue_shopping' | t }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cart",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_order_note",
+      "label": "Show order note",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,20 @@
+{
+  "sections": {
+    "occasion-grid": {
+      "type": "occasion-grid",
+      "settings": {
+        "heading": "The Occasion Edit",
+        "subheading": "Discover handcrafted pieces for every moment"
+      }
+    },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "New Arrivals",
+        "collection": "",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": ["occasion-grid", "featured-collection"]
+}

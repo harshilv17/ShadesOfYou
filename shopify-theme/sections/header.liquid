@@ -1,0 +1,106 @@
+<header class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}" id="SiteHeader">
+  <div class="site-header__inner page-width">
+
+    <button
+      class="site-header__menu-toggle"
+      aria-label="{{ 'accessibility.open_menu' | t }}"
+      aria-expanded="false"
+      aria-controls="MobileNav"
+    >
+      <span class="hamburger"></span>
+    </button>
+
+    <a class="site-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 200
+          | image_tag: alt: shop.name, loading: 'eager', class: 'site-header__logo-img'
+        }}
+      {%- else -%}
+        <span class="site-header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary navigation">
+      <ul class="site-header__nav-list" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li class="site-header__nav-item">
+            <a
+              href="{{ link.url }}"
+              class="site-header__nav-link{% if link.active %} active{% endif %}"
+            >
+              {{ link.title }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__icons">
+      <a href="{{ routes.search_url }}" class="site-header__icon" aria-label="Search">
+        {%- render 'icon-search' -%}
+      </a>
+      <a href="{{ routes.account_url }}" class="site-header__icon" aria-label="Account">
+        {%- render 'icon-account' -%}
+      </a>
+      <button
+        class="site-header__icon site-header__cart-toggle"
+        aria-label="{{ 'accessibility.open_cart' | t }}"
+        data-cart-toggle
+      >
+        {%- render 'icon-cart' -%}
+        <span class="site-header__cart-count{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-count>
+          {{ cart.item_count }}
+        </span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<nav class="mobile-nav" id="MobileNav" aria-label="Mobile navigation">
+  <ul class="mobile-nav__list" role="list">
+    {%- for link in section.settings.menu.links -%}
+      <li>
+        <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
+      </li>
+    {%- endfor -%}
+  </ul>
+</nav>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "Sticky header",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

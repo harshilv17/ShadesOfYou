@@ -1,0 +1,7 @@
+/* ── Product Grid & Featured Collection sections ──────────────────────────── */
+
+.product-grid-section,
+.featured-collection { padding: 60px 0; }
+
+.product-grid-section .page-width,
+.featured-collection .page-width { padding-top: 0; padding-bottom: 0; }

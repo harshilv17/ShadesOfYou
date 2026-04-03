@@ -1,0 +1,65 @@
+<section class="collection-hero section-{{ section.id }}">
+  <div
+    class="collection-hero__media"
+    {% if collection.image %}
+      style="background-image: url('{{ collection.image | image_url: width: 1400 }}')"
+    {% elsif section.settings.fallback_image != blank %}
+      style="background-image: url('{{ section.settings.fallback_image | image_url: width: 1400 }}')"
+    {% endif %}
+  >
+    <div class="collection-hero__overlay"></div>
+    <div class="collection-hero__content page-width">
+      {%- if section.settings.show_breadcrumb -%}
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="{{ routes.root_url }}" class="breadcrumb__link">Home</a>
+          <span class="breadcrumb__sep">/</span>
+          <span class="breadcrumb__current">{{ collection.title }}</span>
+        </nav>
+      {%- endif -%}
+
+      {%- if collection.metafields.custom.tag_label != blank -%}
+        <p class="collection-hero__tag">{{ collection.metafields.custom.tag_label }}</p>
+      {%- elsif section.settings.tag_label != blank -%}
+        <p class="collection-hero__tag">{{ section.settings.tag_label }}</p>
+      {%- endif -%}
+
+      <h1 class="collection-hero__title">{{ collection.title }}</h1>
+
+      {%- if collection.description != blank -%}
+        <p class="collection-hero__desc">{{ collection.description | strip_html | truncatewords: 30 }}</p>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "fallback_image",
+      "label": "Fallback hero image",
+      "info": "Used when the collection has no image set"
+    },
+    {
+      "type": "text",
+      "id": "tag_label",
+      "label": "Tag label",
+      "info": "Overridden by collection metafield custom.tag_label if set"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_breadcrumb",
+      "label": "Show breadcrumb",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Hero"
+    }
+  ]
+}
+{% endschema %}

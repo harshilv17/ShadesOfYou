@@ -1,0 +1,93 @@
+{
+  "general": {
+    "password_page": {
+      "title": "Coming Soon"
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "close": "Close",
+    "open_menu": "Open menu",
+    "close_menu": "Close menu",
+    "open_cart": "Open cart",
+    "close_cart": "Close cart"
+  },
+  "navigation": {
+    "collections": "Collections",
+    "all": "All",
+    "workday": "Work Day",
+    "festive": "Festive",
+    "weekend": "Weekend",
+    "gift": "Gift"
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "quick_add": "Quick Add",
+      "sold_out": "Sold Out",
+      "sale": "Sale",
+      "view_details": "View Details",
+      "choose_options": "Choose Options",
+      "from": "From"
+    },
+    "general": {
+      "items_with_count": {
+        "one": "{{ count }} item",
+        "other": "{{ count }} items"
+      }
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Collections",
+      "items_with_count": {
+        "one": "{{ count }} style",
+        "other": "{{ count }} styles"
+      },
+      "filter": "Filter",
+      "sort_by_label": "Sort by:",
+      "sort_options": {
+        "manual": "Featured",
+        "best_selling": "Best selling",
+        "title_ascending": "Alphabetically, A–Z",
+        "title_descending": "Alphabetically, Z–A",
+        "price_ascending": "Price, low to high",
+        "price_descending": "Price, high to low",
+        "created_ascending": "Date, old to new",
+        "created_descending": "Date, new to old"
+      }
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your Cart",
+      "empty": "Your cart is empty",
+      "continue_shopping": "Continue Shopping",
+      "checkout": "Checkout",
+      "subtotal": "Subtotal",
+      "taxes_and_shipping": "Taxes and shipping calculated at checkout",
+      "remove": "Remove",
+      "update": "Update",
+      "qty": "Qty"
+    }
+  },
+  "sections": {
+    "occasion_grid": {
+      "heading": "The Occasion Edit",
+      "subheading": "Discover handcrafted pieces for every moment"
+    },
+    "header": {
+      "brand": "Shades of You"
+    },
+    "footer": {
+      "tagline": "Handcrafted with love. Worn with intention."
+    }
+  },
+  "templates": {
+    "404": {
+      "title": "Page Not Found",
+      "subtext": "The page you were looking for doesn't exist.",
+      "link": "Continue Shopping"
+    }
+  }
+}

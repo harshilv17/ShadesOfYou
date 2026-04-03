@@ -1,0 +1,67 @@
+{% doc %}
+  Renders a product card for grids.
+
+  @param {product} product - The product object
+  @param {string} [class] - Additional CSS class
+{% enddoc %}
+
+{%- assign card_product = product -%}
+{%- assign first_variant = card_product.selected_or_first_available_variant -%}
+
+<div class="prod-card{% if class != blank %} {{ class }}{% endif %}">
+  <a class="prod-card__link" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
+
+    <div class="prod-card__media">
+      {%- if card_product.featured_media -%}
+        {{
+          card_product.featured_media
+          | image_url: width: 720
+          | image_tag:
+            loading: 'lazy',
+            alt: card_product.featured_media.alt | escape,
+            class: 'prod-card__img',
+            sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+        }}
+        {%- if card_product.media.size > 1 -%}
+          {{
+            card_product.media[1]
+            | image_url: width: 720
+            | image_tag:
+              loading: 'lazy',
+              alt: card_product.media[1].alt | escape,
+              class: 'prod-card__img prod-card__img--hover',
+              sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        <div class="prod-card__img-placeholder">{{ card_product.title | slice: 0 }}</div>
+      {%- endif -%}
+
+      {%- if first_variant.compare_at_price > first_variant.price -%}
+        <span class="prod-card__badge">{{ 'products.product.sale' | t }}</span>
+      {%- endif -%}
+
+      {%- unless first_variant.available -%}
+        <span class="prod-card__badge prod-card__badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
+      {%- endunless -%}
+
+      <div class="prod-card__overlay">
+        <button
+          class="prod-card__quickadd"
+          data-quick-add="{{ card_product.id }}"
+          aria-label="{{ 'products.product.quick_add' | t }}: {{ card_product.title | escape }}"
+        >
+          {{ 'products.product.quick_add' | t }}
+        </button>
+      </div>
+    </div>
+
+    <div class="prod-card__info">
+      <p class="prod-card__vendor">{{ card_product.vendor }}</p>
+      <p class="prod-card__name">{{ card_product.title }}</p>
+      <div class="prod-card__price">
+        {%- render 'price', product: card_product, selected_variant: first_variant -%}
+      </div>
+    </div>
+  </a>
+</div>

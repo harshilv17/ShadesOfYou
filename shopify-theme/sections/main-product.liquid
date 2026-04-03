@@ -1,0 +1,215 @@
+{{- 'product-form.css' | asset_url | stylesheet_tag -}}
+
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+
+<section class="main-product section-{{ section.id }}" id="MainProduct">
+  <div class="page-width">
+    <div class="main-product__layout">
+
+      <!-- Media gallery -->
+      <div class="main-product__media-wrapper">
+        <div class="main-product__media-gallery" id="ProductGallery">
+          {%- for media in product.media -%}
+            <div
+              class="main-product__media-item{% if forloop.first %} main-product__media-item--active{% endif %}"
+              data-media-id="{{ media.id }}"
+            >
+              {%- if media.media_type == 'image' -%}
+                {{
+                  media
+                  | image_url: width: 1000
+                  | image_tag:
+                    loading: forloop.first | ternary: 'eager', 'lazy',
+                    class: 'main-product__img',
+                    sizes: '(min-width: 990px) 50vw, 100vw'
+                }}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+
+        {%- if product.media.size > 1 -%}
+          <div class="main-product__thumbnails" id="ProductThumbs">
+            {%- for media in product.media -%}
+              <button
+                class="main-product__thumb{% if forloop.first %} active{% endif %}"
+                data-media-id="{{ media.id }}"
+                aria-label="{{ media.alt | escape }}"
+              >
+                {{ media | image_url: width: 120 | image_tag: alt: media.alt, loading: 'lazy' }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- Product info -->
+      <div class="main-product__info">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+
+            {%- when 'title' -%}
+              <div class="main-product__title-wrap" {{ block.shopify_attributes }}>
+                <p class="main-product__vendor">{{ product.vendor }}</p>
+                <h1 class="main-product__title">{{ product.title }}</h1>
+              </div>
+
+            {%- when 'price' -%}
+              <div class="main-product__price-wrap" id="PriceContainer" {{ block.shopify_attributes }}>
+                {%- render 'price', product: product, selected_variant: selected_variant -%}
+              </div>
+
+            {%- when 'variant-picker' -%}
+              <div class="main-product__variants" {{ block.shopify_attributes }}>
+                {%- unless product.has_only_default_variant -%}
+                  {%- for option in product.options_with_values -%}
+                    <fieldset class="js-variant-fieldset" data-option-index="{{ forloop.index0 }}">
+                      <legend class="variant-legend">{{ option.name }}</legend>
+                      <div class="variant-options">
+                        {%- for value in option.values -%}
+                          <label class="variant-option">
+                            <input
+                              type="radio"
+                              name="{{ option.name }}"
+                              value="{{ value | escape }}"
+                              {% if option.selected_value == value %}checked{% endif %}
+                              data-variant-option
+                            >
+                            <span class="variant-option__label">{{ value }}</span>
+                          </label>
+                        {%- endfor -%}
+                      </div>
+                    </fieldset>
+                  {%- endfor -%}
+                {%- endunless -%}
+              </div>
+
+            {%- when 'quantity-selector' -%}
+              <div class="main-product__quantity" {{ block.shopify_attributes }}>
+                <label for="QuantityInput" class="quantity-label">Quantity</label>
+                <div class="quantity-selector">
+                  <button type="button" class="quantity-btn" data-qty-decrement>−</button>
+                  <input
+                    id="QuantityInput"
+                    type="number"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    class="quantity-input"
+                    data-qty-input
+                  >
+                  <button type="button" class="quantity-btn" data-qty-increment>+</button>
+                </div>
+              </div>
+
+            {%- when 'buy-buttons' -%}
+              <div class="main-product__buy" {{ block.shopify_attributes }}>
+                {%- form 'product', product, id: 'ProductForm', data-product-form: '' -%}
+                  <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
+                  <button
+                    type="submit"
+                    class="btn btn--primary btn--full"
+                    {% if selected_variant.available == false %}disabled{% endif %}
+                  >
+                    {%- if selected_variant.available -%}
+                      {{ 'products.product.add_to_cart' | t }}
+                    {%- else -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- endif -%}
+                  </button>
+                {%- endform -%}
+
+                {%- if block.settings.show_dynamic_checkout -%}
+                  {{ form | payment_button }}
+                {%- endif -%}
+              </div>
+
+            {%- when 'description' -%}
+              {%- if product.description != blank -%}
+                <div class="main-product__description rte" {{ block.shopify_attributes }}>
+                  {{ product.description }}
+                </div>
+              {%- endif -%}
+
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Information",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "media_size",
+      "label": "Media gallery size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "large"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_info",
+      "label": "Sticky product info on scroll",
+      "default": true
+    }
+  ],
+  "blocks": [
+    { "type": "title", "name": "Title", "limit": 1, "settings": [] },
+    { "type": "price", "name": "Price", "limit": 1, "settings": [] },
+    {
+      "type": "variant-picker",
+      "name": "Variant Picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "select",
+          "id": "picker_type",
+          "label": "Type",
+          "options": [
+            { "value": "dropdown", "label": "Dropdown" },
+            { "value": "button", "label": "Pills / Buttons" }
+          ],
+          "default": "button"
+        }
+      ]
+    },
+    { "type": "quantity-selector", "name": "Quantity Selector", "limit": 1, "settings": [] },
+    {
+      "type": "buy-buttons",
+      "name": "Buy Buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show dynamic checkout button",
+          "default": true
+        }
+      ]
+    },
+    { "type": "description", "name": "Description", "limit": 1, "settings": [] }
+  ],
+  "presets": [
+    {
+      "name": "Product Information",
+      "blocks": [
+        { "type": "title" },
+        { "type": "price" },
+        { "type": "variant-picker" },
+        { "type": "quantity-selector" },
+        { "type": "buy-buttons" },
+        { "type": "description" }
+      ]
+    }
+  ]
+}
+{% endschema %}

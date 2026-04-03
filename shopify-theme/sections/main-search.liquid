@@ -1,0 +1,79 @@
+{{- 'product-grid.css' | asset_url | stylesheet_tag -}}
+
+<section class="main-search section-{{ section.id }}">
+  <div class="page-width">
+    <h1 class="main-search__title">
+      {%- if search.performed -%}
+        Search results for "{{ search.terms }}"
+      {%- else -%}
+        Search
+      {%- endif -%}
+    </h1>
+
+    <form action="{{ routes.search_url }}" method="get" class="main-search__form" role="search">
+      <input
+        type="hidden"
+        name="type"
+        value="product"
+      >
+      <div class="main-search__input-wrap">
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search products…"
+          class="main-search__input"
+          aria-label="Search"
+          autocomplete="off"
+        >
+        <button type="submit" class="main-search__submit" aria-label="Submit">
+          {%- render 'icon-search' -%}
+        </button>
+      </div>
+    </form>
+
+    {%- if search.performed -%}
+      {%- if search.results_count == 0 -%}
+        <p class="main-search__no-results">No results found for "{{ search.terms }}".</p>
+      {%- else -%}
+        <p class="main-search__count">{{ search.results_count }} results</p>
+        <ul class="product-grid columns-{{ section.settings.columns_desktop }}" role="list">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              <li class="product-grid__item">
+                {%- render 'product-card', product: item -%}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Search Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns on desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 12
+    }
+  ]
+}
+{% endschema %}
