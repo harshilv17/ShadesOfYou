@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="{{ settings.color_background }}">
+    <meta name="theme-color" content="#F9F5EF">
 
     {%- if page_description -%}
       <meta name="description" content="{{ page_description | escape }}">
@@ -26,24 +26,34 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 
     {{ 'base.css' | asset_url | stylesheet_tag }}
   </head>
 
-  <body class="{% if template.name == 'index' %}template-index{% else %}template-{{ template.name }}{% endif %}">
-    <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+  <body class="template-{{ template.name }}{% if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}">
+    <a class="skip-to-content-link visually-hidden" href="#MainContent">
       {{ 'accessibility.skip_to_text' | t }}
     </a>
 
     {%- sections 'header-group' -%}
 
-    <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    <main id="MainContent" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
 
     {%- sections 'footer-group' -%}
 
+    <script>
+      window.shopUrl = '{{ shop.url }}';
+      window.routes = {
+        root: '{{ routes.root_url }}',
+        cart: '{{ routes.cart_url }}',
+        cartAdd: '{{ routes.cart_add_url }}.js',
+        cartChange: '{{ routes.cart_change_url }}.js',
+        search: '{{ routes.search_url }}'
+      };
+    </script>
     {{ 'global.js' | asset_url | script_tag }}
   </body>
 </html>

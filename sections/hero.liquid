@@ -1,0 +1,126 @@
+<section class="hero" id="HeroSection">
+  <div class="hero__text">
+    {%- if section.settings.season_text != blank -%}
+      <p class="hero__season">{{ section.settings.season_text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h1 class="hero__title">{{ section.settings.heading }}</h1>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="hero__sub">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    <div class="hero__ctas">
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_url }}" class="btn-dark">
+          {{ section.settings.cta_label }}
+          <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><path d="M1 4.5H12M8 1L12 4.5L8 8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      {%- endif -%}
+      {%- if section.settings.cta2_label != blank -%}
+        <a href="{{ section.settings.cta2_url }}" class="btn-outline">{{ section.settings.cta2_label }}</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 1 -%}
+      <div class="hero__indicators">
+        {%- for block in section.blocks -%}
+          <button class="hero__dot{% if forloop.first %} on{% endif %}" data-hero-dot="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="hero__img">
+    {%- for block in section.blocks -%}
+      <div class="hero__slide{% if forloop.first %} on{% endif %}" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 1400 | image_tag: loading: 'eager', sizes: '58vw' }}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+
+    {%- if section.settings.image_label != blank -%}
+      <span class="hero__img-label">{{ section.settings.image_label }}</span>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Slider",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "season_text",
+      "label": "Season text",
+      "default": "Spring Collection · Handcrafted Batik"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Crafted<br>by hand.<br><em>Made</em><br>for you.</p>"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Premium everyday ethnic wear in handcrafted batik. Where traditional craft meets modern living — designed to move with you."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Primary button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "cta2_label",
+      "label": "Secondary button label",
+      "default": "Discover Batik"
+    },
+    {
+      "type": "url",
+      "id": "cta2_url",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "text",
+      "id": "image_label",
+      "label": "Image label",
+      "default": "New Arrivals · 2025"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slider",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

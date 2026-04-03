@@ -1,71 +1,59 @@
-{{- 'occasion-grid.css' | asset_url | stylesheet_tag -}}
-
-<section class="occasion-grid section-{{ section.id }}" id="OccasionGrid">
-  <div class="occasion-grid__hero">
-    {%- if section.settings.hero_image != blank -%}
-      {{
-        section.settings.hero_image
-        | image_url: width: 1400
-        | image_tag:
-          loading: 'eager',
-          class: 'occasion-grid__hero-bg',
-          sizes: '100vw'
-      }}
-    {%- endif -%}
-    <div class="occasion-grid__hero-content">
-      {%- if section.settings.tagline != blank -%}
-        <p class="occasion-grid__tagline">{{ section.settings.tagline }}</p>
+<section class="occasion">
+  <div class="occasion__hd">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
-        <h1 class="occasion-grid__heading">{{ section.settings.heading }}</h1>
-      {%- endif -%}
-      {%- if section.settings.subheading != blank -%}
-        <p class="occasion-grid__subheading">{{ section.settings.subheading }}</p>
-      {%- endif -%}
-      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}
-        <a href="{{ section.settings.cta_url }}" class="btn btn--primary">
-          {{ section.settings.cta_label }}
-        </a>
+        <h2 class="section-title" style="font-size:clamp(36px,5vw,58px)">{{ section.settings.heading }}</h2>
       {%- endif -%}
     </div>
+    {%- if section.settings.subheading != blank -%}
+      <p class="occasion__sub-hd">{{ section.settings.subheading }}</p>
+    {%- endif -%}
   </div>
 
-  <div class="occasion-grid__cards page-width">
+  <div class="occasion__grid">
+    {%- assign block_count = section.blocks.size -%}
     {%- for block in section.blocks -%}
-      {%- if block.type == 'occasion_card' -%}
-        <a
-          href="{{ block.settings.url }}"
-          class="occasion-card"
-          {{ block.shopify_attributes }}
-        >
-          {%- if block.settings.image != blank -%}
-            <div class="occasion-card__media">
-              {{
-                block.settings.image
-                | image_url: width: 600
-                | image_tag:
-                  loading: 'lazy',
-                  class: 'occasion-card__img',
-                  sizes: '(min-width: 990px) 25vw, (min-width: 750px) 50vw, 100vw'
-              }}
-            </div>
-          {%- else -%}
-            <div class="occasion-card__media occasion-card__media--placeholder">
-              {{ block.settings.label | slice: 0 | upcase }}
-            </div>
-          {%- endif -%}
-          <div class="occasion-card__body">
+      {%- if block.settings.half_height -%}
+        {%- comment %}Start a stack column for half-height cards{% endcomment -%}
+      {%- else -%}
+        <a class="ocard" href="{{ block.settings.url | default: '#' }}" {{ block.shopify_attributes }}>
+          <div class="ocard__ph">
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', sizes: '(min-width: 1024px) 33vw, 100vw' }}
+            {%- endif -%}
+          </div>
+          <div class="ocard__gr"></div>
+          <div class="ocard__corner"></div>
+          <div class="ocard__bd">
             {%- if block.settings.label != blank -%}
-              <p class="occasion-card__label">{{ block.settings.label }}</p>
+              <span class="ocard__tag">{{ block.settings.label }}</span>
             {%- endif -%}
             {%- if block.settings.title != blank -%}
-              <h3 class="occasion-card__title">{{ block.settings.title }}</h3>
+              <h3 class="ocard__nm">{{ block.settings.title }}</h3>
             {%- endif -%}
-            <span class="occasion-card__cta">Shop Now →</span>
+            {%- if block.settings.description != blank -%}
+              <p class="ocard__ds">{{ block.settings.description }}</p>
+            {%- endif -%}
+            <span class="btn-ghost-light">Explore <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><path d="M1 4.5H12M8 1L12 4.5L8 8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
           </div>
         </a>
       {%- endif -%}
     {%- endfor -%}
+  </div>
+
+  <div class="occasion__ft">
+    {%- if section.settings.footer_note != blank -%}
+      <p class="occasion__ft-note">{{ section.settings.footer_note }}</p>
+    {%- endif -%}
+    {%- if section.settings.view_all_label != blank -%}
+      <a class="occasion__all" href="{{ section.settings.view_all_url | default: collections.all.url }}">
+        {{ section.settings.view_all_label }}
+        <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M1 4.5H14M10 1L14 4.5L10 8" stroke="#A85B38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    {%- endif -%}
   </div>
 </section>
 
@@ -75,38 +63,39 @@
   "tag": "section",
   "settings": [
     {
-      "type": "image_picker",
-      "id": "hero_image",
-      "label": "Hero background image"
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Curated for you"
     },
     {
-      "type": "text",
-      "id": "tagline",
-      "label": "Tagline",
-      "default": "Curated for You"
-    },
-    {
-      "type": "text",
+      "type": "richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "The Occasion Edit"
+      "default": "<p>The <em>Occasion</em><br>Edit</p>"
     },
     {
       "type": "text",
       "id": "subheading",
       "label": "Subheading",
-      "default": "Discover handcrafted pieces for every moment"
+      "default": "Not sure where to start? Let your occasion guide you — every piece, handcrafted for exactly that moment."
     },
     {
       "type": "text",
-      "id": "cta_label",
-      "label": "Button label",
-      "default": "Shop All"
+      "id": "footer_note",
+      "label": "Footer note",
+      "default": "Every piece is handcrafted. No two are exactly alike."
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "View all label",
+      "default": "See all styles"
     },
     {
       "type": "url",
-      "id": "cta_url",
-      "label": "Button link"
+      "id": "view_all_url",
+      "label": "View all link"
     }
   ],
   "blocks": [
@@ -114,28 +103,12 @@
       "type": "occasion_card",
       "name": "Occasion Card",
       "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Card image"
-        },
-        {
-          "type": "text",
-          "id": "label",
-          "label": "Label (e.g. Everyday Edit)",
-          "default": "Everyday Edit"
-        },
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Work Day"
-        },
-        {
-          "type": "url",
-          "id": "url",
-          "label": "Link"
-        }
+        { "type": "image_picker", "id": "image", "label": "Card image" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Everyday Edit" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Work Day<br>Wear" },
+        { "type": "text", "id": "description", "label": "Description", "default": "Breathable, polished, easy to move in." },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "checkbox", "id": "half_height", "label": "Half height (for stacked layout)", "default": false }
       ]
     }
   ],
@@ -143,34 +116,10 @@
     {
       "name": "Occasion Grid",
       "blocks": [
-        {
-          "type": "occasion_card",
-          "settings": {
-            "label": "Everyday Edit",
-            "title": "Work Day"
-          }
-        },
-        {
-          "type": "occasion_card",
-          "settings": {
-            "label": "Festive Season",
-            "title": "Festive"
-          }
-        },
-        {
-          "type": "occasion_card",
-          "settings": {
-            "label": "Off-Duty",
-            "title": "Weekend"
-          }
-        },
-        {
-          "type": "occasion_card",
-          "settings": {
-            "label": "Thoughtful Giving",
-            "title": "Gift"
-          }
-        }
+        { "type": "occasion_card", "settings": { "label": "Everyday Edit", "title": "Work Day<br>Wear" } },
+        { "type": "occasion_card", "settings": { "label": "Festive Season", "title": "Puja &<br>Festive" } },
+        { "type": "occasion_card", "settings": { "label": "Off-Duty", "title": "Weekend Easy" } },
+        { "type": "occasion_card", "settings": { "label": "Thoughtful Giving", "title": "Gift with Love" } }
       ]
     }
   ]

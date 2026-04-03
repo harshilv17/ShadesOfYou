@@ -1,67 +1,35 @@
-{% doc %}
-  Renders a product card for grids.
+{%- comment -%}
+  Renders a product card.
+  Accepts:
+  - product: {Object} Product Liquid object
+{%- endcomment -%}
 
-  @param {product} product - The product object
-  @param {string} [class] - Additional CSS class
-{% enddoc %}
-
-{%- assign card_product = product -%}
-{%- assign first_variant = card_product.selected_or_first_available_variant -%}
-
-<div class="prod-card{% if class != blank %} {{ class }}{% endif %}">
-  <a class="prod-card__link" href="{{ card_product.url }}" aria-label="{{ card_product.title | escape }}">
-
-    <div class="prod-card__media">
-      {%- if card_product.featured_media -%}
-        {{
-          card_product.featured_media
-          | image_url: width: 720
-          | image_tag:
-            loading: 'lazy',
-            alt: card_product.featured_media.alt | escape,
-            class: 'prod-card__img',
-            sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
-        }}
-        {%- if card_product.media.size > 1 -%}
-          {{
-            card_product.media[1]
-            | image_url: width: 720
-            | image_tag:
-              loading: 'lazy',
-              alt: card_product.media[1].alt | escape,
-              class: 'prod-card__img prod-card__img--hover',
-              sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw'
-          }}
-        {%- endif -%}
-      {%- else -%}
-        <div class="prod-card__img-placeholder">{{ card_product.title | slice: 0 }}</div>
-      {%- endif -%}
-
-      {%- if first_variant.compare_at_price > first_variant.price -%}
-        <span class="prod-card__badge">{{ 'products.product.sale' | t }}</span>
-      {%- endif -%}
-
-      {%- unless first_variant.available -%}
-        <span class="prod-card__badge prod-card__badge--sold-out">{{ 'products.product.sold_out' | t }}</span>
-      {%- endunless -%}
-
-      <div class="prod-card__overlay">
-        <button
-          class="prod-card__quickadd"
-          data-quick-add="{{ card_product.id }}"
-          aria-label="{{ 'products.product.quick_add' | t }}: {{ card_product.title | escape }}"
-        >
-          {{ 'products.product.quick_add' | t }}
-        </button>
+<a class="pcard" href="{{ product.url }}">
+  <div class="pcard__img">
+    {%- if product.featured_image != blank -%}
+      {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw' }}
+    {%- else -%}
+      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:48px;color:var(--dim)">
+        {{ product.title | slice: 0 | upcase }}
       </div>
-    </div>
+    {%- endif -%}
 
-    <div class="prod-card__info">
-      <p class="prod-card__vendor">{{ card_product.vendor }}</p>
-      <p class="prod-card__name">{{ card_product.title }}</p>
-      <div class="prod-card__price">
-        {%- render 'price', product: card_product, selected_variant: first_variant -%}
-      </div>
+    {%- if product.compare_at_price > product.price -%}
+      <span class="pcard__badge">Sale</span>
+    {%- elsif product.available == false -%}
+      <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
+    {%- endif -%}
+
+    <div class="pcard__over">
+      <span class="pcard__qa">Quick View</span>
     </div>
-  </a>
-</div>
+  </div>
+
+  <p class="pcard__name">{{ product.title }}</p>
+  <p class="pcard__price">
+    {%- if product.compare_at_price > product.price -%}
+      <s>{{ product.compare_at_price | money }}</s>
+    {%- endif -%}
+    <strong>{{ product.price | money }}</strong>
+  </p>
+</a>

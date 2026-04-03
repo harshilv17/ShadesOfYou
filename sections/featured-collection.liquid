@@ -1,30 +1,59 @@
-{{- 'product-grid.css' | asset_url | stylesheet_tag -}}
-
 {%- assign featured = section.settings.collection -%}
 
-<section class="featured-collection section-{{ section.id }}">
-  <div class="page-width">
-    {%- if section.settings.heading != blank -%}
-      <div class="featured-collection__header">
-        <h2 class="featured-collection__title">{{ section.settings.heading }}</h2>
-        {%- if featured != blank -%}
-          <a href="{{ featured.url }}" class="featured-collection__view-all">
-            View All →
-          </a>
-        {%- endif -%}
-      </div>
-    {%- endif -%}
-
-    <ul class="product-grid columns-{{ section.settings.columns_desktop }}" role="list">
-      {%- assign products_to_show = section.settings.products_to_show -%}
-      {%- if featured != blank -%}
-        {%- for product in featured.products limit: products_to_show -%}
-          <li class="product-grid__item">
-            {%- render 'product-card', product: product -%}
-          </li>
-        {%- endfor -%}
+<section class="bestsellers">
+  <div class="bestsellers__hd">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
-    </ul>
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-title bestsellers__title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+    </div>
+    {%- if featured != blank -%}
+      <a href="{{ featured.url }}" class="bestsellers__viewall">
+        View all
+        <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M1 4.5H14M10 1L14 4.5L10 8" stroke="#A85B38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="bestsellers__grid">
+    {%- if featured != blank -%}
+      {%- for product in featured.products limit: section.settings.products_to_show -%}
+        <a class="pcard" href="{{ product.url }}">
+          <div class="pcard__img">
+            {%- if product.featured_image != blank -%}
+              {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw' }}
+            {%- endif -%}
+            {%- if product.compare_at_price > product.price -%}
+              <span class="pcard__badge">Sale</span>
+            {%- endif -%}
+            {%- unless product.available -%}
+              <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
+            {%- endunless -%}
+            <div class="pcard__over">
+              <span class="pcard__qa">Quick View</span>
+            </div>
+          </div>
+          <p class="pcard__name">{{ product.title }}</p>
+          <p class="pcard__price">
+            {%- if product.compare_at_price > product.price -%}
+              <s>{{ product.compare_at_price | money }}</s>
+            {%- endif -%}
+            <strong>{{ product.price | money }}</strong>
+          </p>
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..4) -%}
+        <div class="pcard">
+          <div class="pcard__img" style="display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:48px;color:var(--dim)">{{ i }}</div>
+          <p class="pcard__name">Sample Product {{ i }}</p>
+          <p class="pcard__price"><strong>₹2,599</strong></p>
+        </div>
+      {%- endfor -%}
+    {%- endif -%}
   </div>
 </section>
 
@@ -33,40 +62,23 @@
   "name": "Featured Collection",
   "tag": "section",
   "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Customer Favourites" },
     {
-      "type": "text",
+      "type": "richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "New Arrivals"
+      "default": "<p>Most <em>Loved</em></p>"
     },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
+    { "type": "collection", "id": "collection", "label": "Collection" },
     {
       "type": "range",
       "id": "products_to_show",
       "label": "Products to show",
-      "min": 2,
-      "max": 12,
-      "step": 2,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "columns_desktop",
-      "label": "Columns on desktop",
-      "min": 2,
-      "max": 5,
-      "step": 1,
-      "default": 4
+      "min": 2, "max": 12, "step": 2, "default": 4
     }
   ],
   "presets": [
-    {
-      "name": "Featured Collection"
-    }
+    { "name": "Featured Collection" }
   ]
 }
 {% endschema %}

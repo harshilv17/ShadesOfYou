@@ -1,0 +1,69 @@
+<section class="testimonials">
+  <div class="testimonials__hd">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title testimonials__title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+  </div>
+
+  <div class="testimonials__track" id="testimonialsTrack">
+    {%- for block in section.blocks -%}
+      <div class="tcard" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div class="tcard__img">
+            {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.name | default: 'Customer', sizes: '260px' }}
+          </div>
+        {%- endif -%}
+        <div class="tcard__bd">
+          <span class="tcard__stars">★★★★★</span>
+          {%- if block.settings.quote != blank -%}
+            <p class="tcard__quote">"{{ block.settings.quote }}"</p>
+          {%- endif -%}
+          {%- if block.settings.name != blank -%}
+            <span class="tcard__name">{{ block.settings.name }}</span>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Real customers" },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>SOY & <em>Me</em></p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Customer photo" },
+        { "type": "text", "id": "quote", "label": "Quote", "default": "Wore it all day at work and was still comfortable by evening" },
+        { "type": "text", "id": "name", "label": "Customer name", "default": "Customer" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial", "settings": { "quote": "Wore it all day at work and was still comfortable by evening", "name": "Vidisha" } },
+        { "type": "testimonial", "settings": { "quote": "Super easy to wear for office. The fabric is so soft.", "name": "Sugandha" } },
+        { "type": "testimonial", "settings": { "quote": "I was looking for something comfortable but still nice enough to wear out — this worked perfectly.", "name": "Sonakshi" } },
+        { "type": "testimonial", "settings": { "quote": "You can tell the fabric is good quality. The print still looks new.", "name": "Mamta" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

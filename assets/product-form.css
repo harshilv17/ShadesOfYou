@@ -1,4 +1,1 @@
-/* ── Main Product / Product Form section ──────────────────────────────────── */
-
-.js-variant-fieldset { border: none; padding: 0; margin: 0 0 20px; }
-.quantity-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-dim); display: block; margin-bottom: 10px; }
+/* Product form styles are now in base.css */

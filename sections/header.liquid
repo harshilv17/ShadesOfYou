@@ -1,70 +1,46 @@
-<header class="site-header{% if section.settings.sticky_header %} site-header--sticky{% endif %}" id="SiteHeader">
-  <div class="site-header__inner page-width">
-
-    <button
-      class="site-header__menu-toggle"
-      aria-label="{{ 'accessibility.open_menu' | t }}"
-      aria-expanded="false"
-      aria-controls="MobileNav"
-    >
+<nav class="nav" id="siteNav">
+  <div class="nav__inner">
+    <button class="nav__hamburger" aria-label="Menu" aria-expanded="false" aria-controls="MobileNav">
       <span class="hamburger"></span>
     </button>
 
-    <a class="site-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
+    <div class="nav__left">
+      {%- for link in section.settings.menu_left.links -%}
+        <a href="{{ link.url }}" class="nav__link{% if link.active %} active-link{% endif %}">{{ link.title }}</a>
+      {%- endfor -%}
+    </div>
+
+    <a class="nav__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
       {%- if section.settings.logo != blank -%}
-        {{
-          section.settings.logo
-          | image_url: width: 200
-          | image_tag: alt: shop.name, loading: 'eager', class: 'site-header__logo-img'
-        }}
+        {{ section.settings.logo | image_url: width: 200 | image_tag: alt: shop.name, loading: 'eager' }}
       {%- else -%}
-        <span class="site-header__logo-text">{{ shop.name }}</span>
+        Shades <em>of</em> You
       {%- endif -%}
     </a>
 
-    <nav class="site-header__nav" aria-label="Primary navigation">
-      <ul class="site-header__nav-list" role="list">
-        {%- for link in section.settings.menu.links -%}
-          <li class="site-header__nav-item">
-            <a
-              href="{{ link.url }}"
-              class="site-header__nav-link{% if link.active %} active{% endif %}"
-            >
-              {{ link.title }}
-            </a>
-          </li>
-        {%- endfor -%}
-      </ul>
-    </nav>
+    <div class="nav__right">
+      {%- for link in section.settings.menu_right.links -%}
+        <a href="{{ link.url }}" class="nav__link{% if link.active %} active-link{% endif %}">{{ link.title }}</a>
+      {%- endfor -%}
 
-    <div class="site-header__icons">
-      <a href="{{ routes.search_url }}" class="site-header__icon" aria-label="Search">
-        {%- render 'icon-search' -%}
+      <a href="{{ routes.search_url }}" class="nav__icon" aria-label="Search">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       </a>
-      <a href="{{ routes.account_url }}" class="site-header__icon" aria-label="Account">
-        {%- render 'icon-account' -%}
+      <a href="{{ routes.cart_url }}" class="nav__icon" aria-label="Cart">
+        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M3 1.5H1M3 1.5L5.5 11.5H14.5L16 5H4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="14.5" r="1" fill="currentColor"/><circle cx="13" cy="14.5" r="1" fill="currentColor"/></svg>
+        <span class="nav__cart-count{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-count>{{ cart.item_count }}</span>
       </a>
-      <button
-        class="site-header__icon site-header__cart-toggle"
-        aria-label="{{ 'accessibility.open_cart' | t }}"
-        data-cart-toggle
-      >
-        {%- render 'icon-cart' -%}
-        <span class="site-header__cart-count{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-count>
-          {{ cart.item_count }}
-        </span>
-      </button>
     </div>
-
   </div>
-</header>
+</nav>
 
 <nav class="mobile-nav" id="MobileNav" aria-label="Mobile navigation">
   <ul class="mobile-nav__list" role="list">
-    {%- for link in section.settings.menu.links -%}
-      <li>
-        <a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a>
-      </li>
+    {%- for link in section.settings.menu_left.links -%}
+      <li><a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a></li>
+    {%- endfor -%}
+    {%- for link in section.settings.menu_right.links -%}
+      <li><a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a></li>
     {%- endfor -%}
   </ul>
 </nav>
@@ -77,29 +53,20 @@
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Logo image"
-    },
-    {
-      "type": "range",
-      "id": "logo_width",
-      "label": "Logo width",
-      "min": 60,
-      "max": 300,
-      "step": 10,
-      "unit": "px",
-      "default": 160
+      "label": "Logo image",
+      "info": "Leave blank to use text logo"
     },
     {
       "type": "link_list",
-      "id": "menu",
-      "label": "Menu",
+      "id": "menu_left",
+      "label": "Left navigation menu",
       "default": "main-menu"
     },
     {
-      "type": "checkbox",
-      "id": "sticky_header",
-      "label": "Sticky header",
-      "default": true
+      "type": "link_list",
+      "id": "menu_right",
+      "label": "Right navigation menu",
+      "info": "Links shown to the right of the logo (e.g. Shop All, About, Contact)"
     }
   ]
 }

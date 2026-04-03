@@ -1,0 +1,115 @@
+<section class="contact">
+  <div>
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title contact__info-title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.body != blank -%}
+      <p class="contact__info-body">{{ section.settings.body }}</p>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'detail' -%}
+        <div class="contact__detail" {{ block.shopify_attributes }}>
+          <span class="contact__detail-lbl">{{ block.settings.label }}</span>
+          <div class="contact__detail-val">{{ block.settings.content }}</div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  <div class="contact__form">
+    {%- if section.settings.form_heading != blank -%}
+      <h3 class="contact__form-title">{{ section.settings.form_heading }}</h3>
+    {%- endif -%}
+
+    {%- form 'contact', id: 'ContactForm' -%}
+      {%- if form.posted_successfully? -%}
+        <p style="color:var(--rust);margin-bottom:20px;font-size:13px">Thanks for your message! We'll get back to you soon.</p>
+      {%- endif -%}
+      {%- if form.errors -%}
+        <p style="color:#c0392b;margin-bottom:20px;font-size:13px">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+
+      <div class="form-row">
+        <div class="form-field">
+          <label for="ContactFirstName">First Name</label>
+          <input type="text" id="ContactFirstName" name="contact[first_name]" placeholder="Aarushi">
+        </div>
+        <div class="form-field">
+          <label for="ContactLastName">Last Name</label>
+          <input type="text" id="ContactLastName" name="contact[last_name]" placeholder="Sharma">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="ContactEmail">Email</label>
+        <input type="email" id="ContactEmail" name="contact[email]" placeholder="hello@email.com" required>
+      </div>
+      <div class="form-field">
+        <label for="ContactSubject">Subject</label>
+        <select id="ContactSubject" name="contact[subject]">
+          <option>Order enquiry</option>
+          <option>Returns & exchanges</option>
+          <option>Wholesale</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="ContactBody">Message</label>
+        <textarea id="ContactBody" name="contact[body]" placeholder="Tell us what's on your mind..."></textarea>
+      </div>
+      <button type="submit" class="btn-dark" style="margin-top:8px">Send Message</button>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Get in Touch" },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>We'd love<br>to <em>hear</em> from you</p>"
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": "Body text",
+      "default": "Whether you have a question about an order, want to know more about our craft, or simply want to say hello — we're here."
+    },
+    {
+      "type": "richtext",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "<p>Send a <em>message</em></p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "detail",
+      "name": "Contact Detail",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Email" },
+        { "type": "richtext", "id": "content", "label": "Content", "default": "<p><a href=\"mailto:info@shadesofyou.co.in\">info@shadesofyou.co.in</a></p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Page",
+      "blocks": [
+        { "type": "detail", "settings": { "label": "Email", "content": "<p><a href=\"mailto:info@shadesofyou.co.in\">info@shadesofyou.co.in</a></p>" } },
+        { "type": "detail", "settings": { "label": "Phone", "content": "<p><a href=\"tel:+919354256072\">+91 93542 56072</a></p>" } },
+        { "type": "detail", "settings": { "label": "Store", "content": "<p>The Mix — By London Market<br>GK2, M Block Market, New Delhi</p>" } },
+        { "type": "detail", "settings": { "label": "Manufacturing & Returns", "content": "<p>D3, Udyog Kunj, UPSIDC Industrial Area<br>NH24, Ghaziabad, UP 201001</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

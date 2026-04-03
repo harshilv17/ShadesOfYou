@@ -1,0 +1,63 @@
+<section class="brand-intro">
+  <div class="brand-intro__img">
+    {%- if section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.image.alt | default: shop.name, sizes: '50vw' }}
+    {%- endif -%}
+  </div>
+
+  <div class="brand-intro__txt">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title brand-intro__title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.settings.body != blank -%}
+      <div class="brand-intro__body">{{ section.settings.body }}</div>
+    {%- endif -%}
+
+    {%- if section.settings.quote != blank -%}
+      <blockquote class="brand-intro__quote">{{ section.settings.quote }}</blockquote>
+    {%- endif -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_url }}" class="btn-dark">{{ section.settings.cta_label }}</a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Intro",
+  "tag": "section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Our Story" },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Luxury you<br>can <em>live in</em></p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>We started Shades of You from a simple belief — that everyday ethnic wear shouldn't ask you to choose between beauty and comfort. That the clothes you reach for every morning can be handcrafted, thoughtful, and genuinely good to wear.</p><p>Every piece is printed on natural fabric using traditional batik — a slow, wax-resist technique where no two prints come out the same. That slight variation isn't imperfection. It's the mark of something made by hand.</p>"
+    },
+    {
+      "type": "text",
+      "id": "quote",
+      "label": "Quote",
+      "default": "\"Slow luxury, built with intention — where the art comes first, and the woman always comes first.\""
+    },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Meet Aarushi & Shanaya" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "presets": [
+    { "name": "Brand Intro" }
+  ]
+}
+{% endschema %}

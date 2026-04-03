@@ -1,0 +1,21 @@
+{
+  "sections": {
+    "main-contact": {
+      "type": "main-contact",
+      "settings": {
+        "eyebrow": "Get in Touch",
+        "heading": "<p>We'd love<br>to <em>hear</em> from you</p>",
+        "body": "Whether you have a question about an order, want to know more about our craft, or simply want to say hello — we're here.",
+        "form_heading": "<p>Send a <em>message</em></p>"
+      },
+      "blocks": {
+        "d1": { "type": "detail", "settings": { "label": "Email", "content": "<p><a href=\"mailto:info@shadesofyou.co.in\">info@shadesofyou.co.in</a></p>" } },
+        "d2": { "type": "detail", "settings": { "label": "Phone", "content": "<p><a href=\"tel:+919354256072\">+91 93542 56072</a></p>" } },
+        "d3": { "type": "detail", "settings": { "label": "Store", "content": "<p>The Mix — By London Market<br>GK2, M Block Market, New Delhi<br><em>Landmark: Carnatic Cafe</em></p>" } },
+        "d4": { "type": "detail", "settings": { "label": "Manufacturing & Returns", "content": "<p>D3, Udyog Kunj, UPSIDC Industrial Area<br>NH24, Ghaziabad, UP 201001</p>" } }
+      },
+      "block_order": ["d1", "d2", "d3", "d4"]
+    }
+  },
+  "order": ["main-contact"]
+}

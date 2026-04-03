@@ -1,0 +1,113 @@
+<div class="about__hero">
+  {%- if section.settings.hero_image != blank -%}
+    {{ section.settings.hero_image | image_url: width: 1400 | image_tag: loading: 'eager', sizes: '100vw' }}
+  {%- endif -%}
+  <div class="about__hero-overlay">
+    <div class="about__hero-txt">
+      <span class="about__hero-tag">{{ section.settings.hero_tag | default: 'Our Story' }}</span>
+      <h1 class="about__hero-title">{{ section.settings.hero_heading }}</h1>
+    </div>
+  </div>
+</div>
+
+<div class="about__founders">
+  <div class="about__founders-img">
+    {%- if section.settings.founders_image != blank -%}
+      {{ section.settings.founders_image | image_url: width: 1200 | image_tag: loading: 'lazy', sizes: '50vw' }}
+    {%- endif -%}
+  </div>
+  <div class="about__founders-txt">
+    {%- if section.settings.founders_eyebrow != blank -%}
+      <p class="eyebrow">{{ section.settings.founders_eyebrow }}</p>
+    {%- endif -%}
+    {%- if section.settings.founders_heading != blank -%}
+      <h2 class="section-title about__founders-title">{{ section.settings.founders_heading }}</h2>
+    {%- endif -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'founder_paragraph' -%}
+        <p class="about__founders-body" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if section.settings.founders_cta_label != blank -%}
+      <a class="btn-dark" href="{{ section.settings.founders_cta_url | default: '#' }}" {% if section.settings.founders_cta_new_tab %}target="_blank" rel="noopener"{% endif %} style="margin-top:18px">
+        {{ section.settings.founders_cta_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+<div class="about__values">
+  <p class="about__values-lbl">What<br>we stand<br>for</p>
+  <div class="about__values-grid">
+    {%- assign value_index = 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'value' -%}
+        {%- assign value_index = value_index | plus: 1 -%}
+        <div {{ block.shopify_attributes }}>
+          <span class="about__value-num">{{ value_index | prepend: '0' | slice: -2, 2 }}</span>
+          <h3 class="about__value-title">{{ block.settings.title }}</h3>
+          <p class="about__value-body">{{ block.settings.body }}</p>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "About Page",
+  "tag": "section",
+  "settings": [
+    { "type": "image_picker", "id": "hero_image", "label": "Hero image" },
+    { "type": "text", "id": "hero_tag", "label": "Hero tag", "default": "Our Story" },
+    {
+      "type": "richtext",
+      "id": "hero_heading",
+      "label": "Hero heading",
+      "default": "<p>Made by women,<br><em>for women</em></p>"
+    },
+    { "type": "image_picker", "id": "founders_image", "label": "Founders image" },
+    { "type": "text", "id": "founders_eyebrow", "label": "Founders eyebrow", "default": "The Founders" },
+    {
+      "type": "richtext",
+      "id": "founders_heading",
+      "label": "Founders heading",
+      "default": "<p>By Aarushi<br>& <em>Shanaya</em></p>"
+    },
+    { "type": "text", "id": "founders_cta_label", "label": "Founders CTA label", "default": "Follow Our Journey" },
+    { "type": "url", "id": "founders_cta_url", "label": "Founders CTA link" },
+    { "type": "checkbox", "id": "founders_cta_new_tab", "label": "Open in new tab", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "founder_paragraph",
+      "name": "Founder Paragraph",
+      "settings": [
+        { "type": "textarea", "id": "text", "label": "Paragraph text" }
+      ]
+    },
+    {
+      "type": "value",
+      "name": "Core Value",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "The Craft First" },
+        { "type": "textarea", "id": "body", "label": "Description", "default": "Every print is wax-resist batik, done by hand." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Page",
+      "blocks": [
+        { "type": "founder_paragraph", "settings": { "text": "Shades of You is not just a brand — it is a shared vision, built by two founders bound by friendship, ambition, and a relentless drive to create something meaningful." } },
+        { "type": "founder_paragraph", "settings": { "text": "Childhood school friends with a deep love for craft, commerce, and discipline — they came together with one goal: to build a brand that blends purpose with scale, heritage with modernity." } },
+        { "type": "founder_paragraph", "settings": { "text": "At the heart of SOY lies Batik — a rare wax-resist printing technique practiced by skilled karigars whose hands carry generations of knowledge. The founders see their role not as creators of this art, but as its custodians." } },
+        { "type": "value", "settings": { "title": "The Craft First", "body": "Every print is wax-resist batik, done by hand by skilled artisans. We don't treat craft as a marketing word. It is the reason we exist." } },
+        { "type": "value", "settings": { "title": "Fabric That Breathes", "body": "We use natural, organic fabrics — soft on the skin, good for the planet. Ethnic wear shouldn't feel stiff or synthetic." } },
+        { "type": "value", "settings": { "title": "Made for Every Body", "body": "We size from XXS to 6XL because luxury isn't conditional. Every woman deserves to wear something beautiful, exactly as she is." } },
+        { "type": "value", "settings": { "title": "Slow, Not Fast", "body": "SOY is not trend-led, not mass-produced, not fast fashion. It is slow luxury — built with intention, worn with ease." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

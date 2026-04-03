@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "main-about": {
+      "type": "main-about",
+      "settings": {
+        "hero_tag": "Our Story",
+        "hero_heading": "<p>Made by women,<br><em>for women</em></p>",
+        "founders_eyebrow": "The Founders",
+        "founders_heading": "<p>By Aarushi<br>& <em>Shanaya</em></p>",
+        "founders_cta_label": "Follow Our Journey",
+        "founders_cta_new_tab": true
+      },
+      "blocks": {
+        "fp1": { "type": "founder_paragraph", "settings": { "text": "Shades of You is not just a brand — it is a shared vision, built by two founders bound by friendship, ambition, and a relentless drive to create something meaningful." } },
+        "fp2": { "type": "founder_paragraph", "settings": { "text": "Childhood school friends with a deep love for craft, commerce, and discipline — they came together with one goal: to build a brand that blends purpose with scale, heritage with modernity." } },
+        "fp3": { "type": "founder_paragraph", "settings": { "text": "At the heart of SOY lies Batik — a rare wax-resist printing technique practiced by skilled karigars whose hands carry generations of knowledge. The founders see their role not as creators of this art, but as its custodians." } },
+        "v1": { "type": "value", "settings": { "title": "The Craft First", "body": "Every print is wax-resist batik, done by hand by skilled artisans. We don't treat craft as a marketing word. It is the reason we exist." } },
+        "v2": { "type": "value", "settings": { "title": "Fabric That Breathes", "body": "We use natural, organic fabrics — soft on the skin, good for the planet. Ethnic wear shouldn't feel stiff or synthetic." } },
+        "v3": { "type": "value", "settings": { "title": "Made for Every Body", "body": "We size from XXS to 6XL because luxury isn't conditional. Every woman deserves to wear something beautiful, exactly as she is." } },
+        "v4": { "type": "value", "settings": { "title": "Slow, Not Fast", "body": "SOY is not trend-led, not mass-produced, not fast fashion. It is slow luxury — built with intention, worn with ease." } }
+      },
+      "block_order": ["fp1", "fp2", "fp3", "v1", "v2", "v3", "v4"]
+    }
+  },
+  "order": ["main-about"]
+}

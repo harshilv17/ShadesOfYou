@@ -1,0 +1,71 @@
+<section class="insta">
+  <div class="insta__hd">
+    <div>
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-title" style="font-size:clamp(28px,3vw,40px)">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.handle != blank -%}
+        <p class="insta__handle">{{ section.settings.handle }}</p>
+      {%- endif -%}
+    </div>
+    {%- if section.settings.instagram_url != blank -%}
+      <a class="insta__follow" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
+        Follow on Instagram
+        <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M1 4.5H14M10 1L14 4.5L10 8" stroke="#A85B38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="insta__grid">
+    {%- for block in section.blocks -%}
+      <div class="insta__item" {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          {{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '', sizes: '(min-width: 700px) 16vw, 33vw' }}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Instagram Feed",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "Community" },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>As <em>seen</em> on you</p>"
+    },
+    { "type": "text", "id": "handle", "label": "Instagram handle", "default": "@shadesofyouofficial" },
+    { "type": "url", "id": "instagram_url", "label": "Instagram URL" }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Instagram Image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram Feed",
+      "blocks": [
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" },
+        { "type": "image" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,73 @@
+<section class="batik">
+  <div class="batik__txt">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="batik__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="batik__title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'paragraph' -%}
+        <p class="batik__body" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if section.settings.cta_label != blank -%}
+      <a class="batik__cta" href="{{ section.settings.cta_url | default: '#' }}" {% if section.settings.cta_new_tab %}target="_blank" rel="noopener"{% endif %}>
+        {{ section.settings.cta_label }}
+        <svg width="13" height="9" viewBox="0 0 13 9" fill="none"><path d="M1 4.5H12M8 1L12 4.5L8 8" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    {%- endif -%}
+  </div>
+
+  <div class="batik__img">
+    {%- if section.settings.image != blank -%}
+      {{ section.settings.image | image_url: width: 1200 | image_tag: loading: 'lazy', alt: section.settings.image.alt | default: 'Batik craft', sizes: '50vw' }}
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Batik Craft",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow text", "default": "The Craft" },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>Handcrafted<br><em>Batik</em></p>"
+    },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Learn About Batik" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    { "type": "checkbox", "id": "cta_new_tab", "label": "Open link in new tab", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "name": "Paragraph",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Batik is a slow printing technique where wax and dye interact organically on natural fabrics."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Batik Craft",
+      "blocks": [
+        { "type": "paragraph", "settings": { "text": "Batik is a slow printing technique where wax and dye interact organically on natural fabrics. Patterns are created by hand, guided by skill rather than machines." } },
+        { "type": "paragraph", "settings": { "text": "Each piece carries subtle variations — a slightly deeper edge, a softer centre, a bleed of colour where the wax cracked just so. That is not error. That is the art." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

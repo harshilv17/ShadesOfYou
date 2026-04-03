@@ -1,143 +1,152 @@
-{{- 'product-form.css' | asset_url | stylesheet_tag -}}
-
 {%- assign selected_variant = product.selected_or_first_available_variant -%}
 
-<section class="main-product section-{{ section.id }}" id="MainProduct">
-  <div class="page-width">
-    <div class="main-product__layout">
+<section class="prod-pg" id="MainProduct">
+  <div class="prod-pg__inner">
 
-      <!-- Media gallery -->
-      <div class="main-product__media-wrapper">
-        <div class="main-product__media-gallery" id="ProductGallery">
-          {%- for media in product.media -%}
-            <div
-              class="main-product__media-item{% if forloop.first %} main-product__media-item--active{% endif %}"
-              data-media-id="{{ media.id }}"
-            >
-              {%- if media.media_type == 'image' -%}
-                {{
-                  media
-                  | image_url: width: 1000
-                  | image_tag:
-                    loading: forloop.first | ternary: 'eager', 'lazy',
-                    class: 'main-product__img',
-                    sizes: '(min-width: 990px) 50vw, 100vw'
-                }}
-              {%- endif -%}
-            </div>
-          {%- endfor -%}
-        </div>
-
-        {%- if product.media.size > 1 -%}
-          <div class="main-product__thumbnails" id="ProductThumbs">
-            {%- for media in product.media -%}
-              <button
-                class="main-product__thumb{% if forloop.first %} active{% endif %}"
-                data-media-id="{{ media.id }}"
-                aria-label="{{ media.alt | escape }}"
-              >
-                {{ media | image_url: width: 120 | image_tag: alt: media.alt, loading: 'lazy' }}
-              </button>
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-      </div>
-
-      <!-- Product info -->
-      <div class="main-product__info">
-        {%- for block in section.blocks -%}
-          {%- case block.type -%}
-
-            {%- when 'title' -%}
-              <div class="main-product__title-wrap" {{ block.shopify_attributes }}>
-                <p class="main-product__vendor">{{ product.vendor }}</p>
-                <h1 class="main-product__title">{{ product.title }}</h1>
-              </div>
-
-            {%- when 'price' -%}
-              <div class="main-product__price-wrap" id="PriceContainer" {{ block.shopify_attributes }}>
-                {%- render 'price', product: product, selected_variant: selected_variant -%}
-              </div>
-
-            {%- when 'variant-picker' -%}
-              <div class="main-product__variants" {{ block.shopify_attributes }}>
-                {%- unless product.has_only_default_variant -%}
-                  {%- for option in product.options_with_values -%}
-                    <fieldset class="js-variant-fieldset" data-option-index="{{ forloop.index0 }}">
-                      <legend class="variant-legend">{{ option.name }}</legend>
-                      <div class="variant-options">
-                        {%- for value in option.values -%}
-                          <label class="variant-option">
-                            <input
-                              type="radio"
-                              name="{{ option.name }}"
-                              value="{{ value | escape }}"
-                              {% if option.selected_value == value %}checked{% endif %}
-                              data-variant-option
-                            >
-                            <span class="variant-option__label">{{ value }}</span>
-                          </label>
-                        {%- endfor -%}
-                      </div>
-                    </fieldset>
-                  {%- endfor -%}
-                {%- endunless -%}
-              </div>
-
-            {%- when 'quantity-selector' -%}
-              <div class="main-product__quantity" {{ block.shopify_attributes }}>
-                <label for="QuantityInput" class="quantity-label">Quantity</label>
-                <div class="quantity-selector">
-                  <button type="button" class="quantity-btn" data-qty-decrement>−</button>
-                  <input
-                    id="QuantityInput"
-                    type="number"
-                    name="quantity"
-                    value="1"
-                    min="1"
-                    class="quantity-input"
-                    data-qty-input
-                  >
-                  <button type="button" class="quantity-btn" data-qty-increment>+</button>
-                </div>
-              </div>
-
-            {%- when 'buy-buttons' -%}
-              <div class="main-product__buy" {{ block.shopify_attributes }}>
-                {%- form 'product', product, id: 'ProductForm', data-product-form: '' -%}
-                  <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
-                  <button
-                    type="submit"
-                    class="btn btn--primary btn--full"
-                    {% if selected_variant.available == false %}disabled{% endif %}
-                  >
-                    {%- if selected_variant.available -%}
-                      {{ 'products.product.add_to_cart' | t }}
-                    {%- else -%}
-                      {{ 'products.product.sold_out' | t }}
-                    {%- endif -%}
-                  </button>
-                {%- endform -%}
-
-                {%- if block.settings.show_dynamic_checkout -%}
-                  {{ form | payment_button }}
-                {%- endif -%}
-              </div>
-
-            {%- when 'description' -%}
-              {%- if product.description != blank -%}
-                <div class="main-product__description rte" {{ block.shopify_attributes }}>
-                  {{ product.description }}
-                </div>
-              {%- endif -%}
-
-          {%- endcase -%}
+    <!-- Gallery -->
+    <div class="prod-pg__gallery">
+      <div class="prod-pg__main" id="ProductGallery">
+        {%- for media in product.media -%}
+          {%- if forloop.first -%}
+            {{ media | image_url: width: 1000 | image_tag: loading: 'eager', id: 'pgMainImg', sizes: '(min-width: 900px) 50vw, 100vw' }}
+          {%- endif -%}
         {%- endfor -%}
       </div>
 
+      {%- if product.media.size > 1 -%}
+        <div class="prod-pg__thumbs" id="ProductThumbs">
+          {%- for media in product.media -%}
+            <button
+              class="prod-pg__thumb{% if forloop.first %} on{% endif %}"
+              data-media-src="{{ media | image_url: width: 1000 }}"
+            >
+              {{ media | image_url: width: 120 | image_tag: alt: media.alt, loading: 'lazy' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
     </div>
+
+    <!-- Info -->
+    <div class="prod-pg__info">
+      <p class="eyebrow">{{ product.type }}</p>
+      <h1 class="prod-pg__name">{{ product.title }}</h1>
+
+      <div class="prod-pg__pricing" id="PriceContainer">
+        <span class="prod-pg__price">{{ selected_variant.price | money }}</span>
+        {%- if selected_variant.compare_at_price > selected_variant.price -%}
+          <span class="prod-pg__mrp">{{ selected_variant.compare_at_price | money }}</span>
+          {%- assign saved_pct = selected_variant.compare_at_price | minus: selected_variant.price | times: 100 | divided_by: selected_variant.compare_at_price -%}
+          <span class="prod-pg__saved">{{ saved_pct }}% off</span>
+        {%- endif -%}
+      </div>
+
+      <div class="prod-pg__divider"></div>
+
+      {%- unless product.has_only_default_variant -%}
+        {%- for option in product.options_with_values -%}
+          <fieldset class="js-variant-fieldset" data-option-index="{{ forloop.index0 }}">
+            <div class="prod-pg__size-lbl">
+              <span>{{ option.name }}</span>
+            </div>
+            <div class="variant-options" style="margin-bottom:28px">
+              {%- for value in option.values -%}
+                <label class="variant-option">
+                  <input
+                    type="radio"
+                    name="{{ option.name }}"
+                    value="{{ value | escape }}"
+                    {% if option.selected_value == value %}checked{% endif %}
+                    data-variant-option
+                  >
+                  <span class="variant-option__label">{{ value }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </fieldset>
+        {%- endfor -%}
+      {%- endunless -%}
+
+      <div class="prod-pg__actions">
+        {%- form 'product', product, id: 'ProductForm', data-product-form: '' -%}
+          <input type="hidden" name="id" value="{{ selected_variant.id }}" data-variant-id>
+          <button
+            type="submit"
+            class="prod-pg__atc"
+            {% unless selected_variant.available %}disabled{% endunless %}
+          >
+            {%- if selected_variant.available -%}
+              Add to Cart
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </button>
+        {%- endform -%}
+
+        <button class="prod-pg__wish" aria-label="Add to wishlist">
+          <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M9 14.5C9 14.5 1.5 9.5 1.5 5C1.5 3.07 3.07 1.5 5 1.5C6.5 1.5 7.8 2.3 8.5 3.5C9.2 2.3 10.5 1.5 12 1.5C13.93 1.5 15.5 3.07 15.5 5C16.5 9.5 9 14.5 9 14.5Z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <div class="prod-pg__accordions">
+        {%- if product.description != blank -%}
+          <div class="prod-pg__acc">
+            <button class="prod-pg__acc-hd" data-accordion-toggle>
+              Product Details <span class="prod-pg__acc-icon">−</span>
+            </button>
+            <div class="prod-pg__acc-bd open">{{ product.description }}</div>
+          </div>
+        {%- endif -%}
+
+        {%- if product.metafields.custom.fabric_care != blank -%}
+          <div class="prod-pg__acc">
+            <button class="prod-pg__acc-hd" data-accordion-toggle>
+              Fabric & Care <span class="prod-pg__acc-icon">+</span>
+            </button>
+            <div class="prod-pg__acc-bd">{{ product.metafields.custom.fabric_care }}</div>
+          </div>
+        {%- endif -%}
+
+        <div class="prod-pg__acc">
+          <button class="prod-pg__acc-hd" data-accordion-toggle>
+            Shipping & Returns <span class="prod-pg__acc-icon">+</span>
+          </button>
+          <div class="prod-pg__acc-bd">Ships within 3–5 business days. Free shipping on orders above ₹999. Easy 7-day returns on all unworn, unwashed items.</div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  {%- if section.settings.show_recommendations -%}
+    <div class="prod-pg__also">
+      <h3 class="prod-pg__also-title">You may also <em>love</em></h3>
+      <div class="prod-pg__also-grid" id="ProductRecommendations" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}">
+        {%- for rec in recommendations.products limit: 4 -%}
+          <a class="pcard" href="{{ rec.url }}">
+            <div class="pcard__img">
+              {%- if rec.featured_image != blank -%}
+                {{ rec.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: rec.title, sizes: '25vw' }}
+              {%- endif -%}
+              {%- if rec.compare_at_price > rec.price -%}
+                <span class="pcard__badge">Sale</span>
+              {%- endif -%}
+            </div>
+            <p class="pcard__name">{{ rec.title }}</p>
+            <p class="pcard__price">
+              {%- if rec.compare_at_price > rec.price -%}<s>{{ rec.compare_at_price | money }}</s>{%- endif -%}
+              <strong>{{ rec.price | money }}</strong>
+            </p>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
 </section>
+
+<script type="application/json" data-product-variants>
+  {{ product.variants | json }}
+</script>
 
 {% schema %}
 {
@@ -145,71 +154,14 @@
   "tag": "section",
   "settings": [
     {
-      "type": "select",
-      "id": "media_size",
-      "label": "Media gallery size",
-      "options": [
-        { "value": "small", "label": "Small" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "large", "label": "Large" }
-      ],
-      "default": "large"
-    },
-    {
       "type": "checkbox",
-      "id": "enable_sticky_info",
-      "label": "Sticky product info on scroll",
+      "id": "show_recommendations",
+      "label": "Show product recommendations",
       "default": true
     }
   ],
-  "blocks": [
-    { "type": "title", "name": "Title", "limit": 1, "settings": [] },
-    { "type": "price", "name": "Price", "limit": 1, "settings": [] },
-    {
-      "type": "variant-picker",
-      "name": "Variant Picker",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "select",
-          "id": "picker_type",
-          "label": "Type",
-          "options": [
-            { "value": "dropdown", "label": "Dropdown" },
-            { "value": "button", "label": "Pills / Buttons" }
-          ],
-          "default": "button"
-        }
-      ]
-    },
-    { "type": "quantity-selector", "name": "Quantity Selector", "limit": 1, "settings": [] },
-    {
-      "type": "buy-buttons",
-      "name": "Buy Buttons",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "checkbox",
-          "id": "show_dynamic_checkout",
-          "label": "Show dynamic checkout button",
-          "default": true
-        }
-      ]
-    },
-    { "type": "description", "name": "Description", "limit": 1, "settings": [] }
-  ],
   "presets": [
-    {
-      "name": "Product Information",
-      "blocks": [
-        { "type": "title" },
-        { "type": "price" },
-        { "type": "variant-picker" },
-        { "type": "quantity-selector" },
-        { "type": "buy-buttons" },
-        { "type": "description" }
-      ]
-    }
+    { "name": "Product Information" }
   ]
 }
 {% endschema %}
