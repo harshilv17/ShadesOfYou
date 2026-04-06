@@ -3,6 +3,23 @@
     <h1 class="main-cart__title">{{ 'cart.general.title' | t }}</h1>
 
     {%- if cart.item_count > 0 -%}
+
+      {%- assign free_shipping_threshold = 99900 -%}
+      {%- assign remaining = free_shipping_threshold | minus: cart.total_price -%}
+      <div class="cart-shipping-bar">
+        {%- if remaining <= 0 -%}
+          <p class="cart-shipping-bar__text cart-shipping-bar__text--done">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 8L7 11L12 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            You've unlocked <strong>free shipping!</strong>
+          </p>
+          <div class="cart-shipping-bar__track"><div class="cart-shipping-bar__fill" style="width:100%"></div></div>
+        {%- else -%}
+          <p class="cart-shipping-bar__text">You're <strong>{{ remaining | money }}</strong> away from free shipping</p>
+          {%- assign pct = cart.total_price | times: 100 | divided_by: free_shipping_threshold -%}
+          <div class="cart-shipping-bar__track"><div class="cart-shipping-bar__fill" style="width:{{ pct }}%"></div></div>
+        {%- endif -%}
+      </div>
+
       {%- form 'cart', cart, id: 'CartForm', data-cart-form: '' -%}
         <div class="main-cart__layout">
           <div class="main-cart__items">
@@ -58,6 +75,22 @@
             <button type="submit" name="checkout" class="btn btn--primary btn--full">
               {{ 'cart.general.checkout' | t }}
             </button>
+
+            <div class="cart-trust">
+              <div class="cart-trust__item">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2C8 2 3 3.5 3 7.5C3 10.5 5 13.5 8 15C11 13.5 13 10.5 13 7.5C13 3.5 8 2 8 2Z" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M5.5 8L7 9.5L10.5 6" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Secure checkout</span>
+              </div>
+              <div class="cart-trust__item">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3.5 6L2 8L3.5 10" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12.5 6L14 8L12.5 10" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 8H14" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+                <span>7-day easy returns</span>
+              </div>
+              <div class="cart-trust__item">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M4.5 5V3.5C4.5 2.12 5.62 1 7 1H9C10.38 1 11.5 2.12 11.5 3.5V5" stroke="currentColor" stroke-width="1"/></svg>
+                <span>COD available</span>
+              </div>
+            </div>
+
             <a href="{{ routes.root_url }}" class="main-cart__continue">
               {{ 'cart.general.continue_shopping' | t }}
             </a>
@@ -67,11 +100,23 @@
 
     {%- else -%}
       <div class="main-cart__empty">
-        <p>{{ 'cart.general.empty' | t }}</p>
-        <a href="{{ routes.root_url }}" class="btn btn--primary">
-          {{ 'cart.general.continue_shopping' | t }}
+        <p class="main-cart__empty-heading">Your cart is empty</p>
+        <p class="main-cart__empty-sub">Looks like you haven't found your piece yet.</p>
+        <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">
+          Browse All Styles
         </a>
       </div>
+
+      {%- if collections.all.products.size > 0 -%}
+        <div class="main-cart__suggestions">
+          <h3 class="main-cart__suggestions-title">Most <em>loved</em> right now</h3>
+          <div class="main-cart__suggestions-grid">
+            {%- for product in collections.all.products limit: 4 -%}
+              {%- render 'product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
     {%- endif -%}
   </div>
 </section>

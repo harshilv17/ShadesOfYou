@@ -2,10 +2,16 @@
   "type": "header",
   "name": "Header group",
   "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Free shipping on orders above ₹999 · COD available"
+      }
+    },
     "header": {
       "type": "header",
       "settings": {}
     }
   },
-  "order": ["header"]
+  "order": ["announcement-bar", "header"]
 }

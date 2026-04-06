@@ -4,12 +4,13 @@
       <a href="{{ routes.root_url }}" class="footer__logo">Shades <em>of</em> You</a>
       <p class="footer__tagline">{{ section.settings.tagline }}</p>
       {%- if section.settings.show_newsletter -%}
-        <p style="font-size:11px;color:rgba(255,255,255,.3)">Stay in the loop</p>
+        <p class="footer__newsletter-hook">Get 10% off your first order</p>
+        <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px">Plus early access to new drops & exclusive offers.</p>
         {%- form 'customer', id: 'FooterNewsletter' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           <div class="footer__email-row" style="margin-top:10px">
             <input class="footer__email-in" type="email" name="contact[email]" placeholder="Your email" required>
-            <button class="footer__email-btn" type="submit">Subscribe</button>
+            <button class="footer__email-btn" type="submit">Get 10% Off</button>
           </div>
         {%- endform -%}
       {%- endif -%}
