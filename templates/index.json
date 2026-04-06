@@ -308,8 +308,8 @@
   "order": [
     "hero",
     "marquee",
-    "occasion-grid",
     "featured-collection",
+    "occasion-grid",
     "testimonials",
     "brand-intro",
     "batik-craft",

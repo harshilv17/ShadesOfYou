@@ -312,7 +312,7 @@ ul, ol { list-style: none; }
 ═══════════════════════════════════════════ */
 .occasion {
   max-width: 1360px; margin: 0 auto;
-  padding: 80px 48px 88px;
+  padding: 80px 48px 40px;
 }
 .occasion__hd {
   display: flex; align-items: flex-end; justify-content: space-between;
@@ -393,13 +393,13 @@ ul, ol { list-style: none; }
 .occasion__all:hover { gap: 14px; }
 
 @media (max-width: 1024px) {
-  .occasion { padding: 60px 32px 72px; }
+  .occasion { padding: 60px 32px 36px; }
   .occasion__grid { grid-template-columns: 1fr 1fr; grid-template-rows: 360px 280px; }
   .ocard--stack { flex-direction: row; grid-column: span 2; }
   .ocard--stack .ocard__in { height: 100%; }
 }
 @media (max-width: 640px) {
-  .occasion { padding: 48px 20px 60px; }
+  .occasion { padding: 48px 20px 28px; }
   .occasion__hd { flex-direction: column; align-items: flex-start; }
   .occasion__sub-hd { text-align: left; max-width: 100%; }
   .occasion__grid { grid-template-columns: 1fr; grid-template-rows: auto; }
@@ -507,7 +507,7 @@ ul, ol { list-style: none; }
 /* ═══════════════════════════════════════════
    BESTSELLERS / FEATURED COLLECTION
 ═══════════════════════════════════════════ */
-.bestsellers { max-width: 1360px; margin: 0 auto; padding: 88px 48px; }
+.bestsellers { max-width: 1360px; margin: 0 auto; padding: 48px 48px 88px; }
 .bestsellers__hd {
   display: flex; align-items: flex-end;
   justify-content: space-between; margin-bottom: 44px; gap: 16px;
@@ -529,7 +529,7 @@ ul, ol { list-style: none; }
 
 @media (max-width: 1024px) { .bestsellers__grid { grid-template-columns: repeat(3,1fr); } }
 @media (max-width: 700px) {
-  .bestsellers { padding: 56px 20px; }
+  .bestsellers { padding: 36px 20px 56px; }
   .bestsellers__grid { grid-template-columns: repeat(2,1fr); gap: 12px 10px; }
   .bestsellers__hd { flex-direction: column; align-items: flex-start; }
 }
