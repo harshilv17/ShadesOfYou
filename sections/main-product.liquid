@@ -53,7 +53,7 @@
     <!-- Zoom lightbox -->
     <div class="prod-pg__zoom-overlay" id="ZoomOverlay" aria-hidden="true">
       <div class="prod-pg__zoom-img-wrap" id="ZoomImgWrap">
-        <img id="ZoomImg" src="" alt="Zoomed product image" />
+        <img id="ZoomImg" src="" width="1800" height="1800" alt="Zoomed product image" />
       </div>
       <button class="prod-pg__zoom-close" type="button" data-close-zoom aria-label="Close zoom">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -71,9 +71,10 @@
         <a class="prod-pg__rating" href="#ProductReviews">
           <span class="prod-pg__stars" aria-label="{{ rating_val }} out of 5 stars">
             {%- for i in (1..5) -%}
+              {%- assign half_val = i | minus: 0.5 -%}
               {%- if rating_val >= i -%}
                 <svg class="star star--full" width="14" height="14" viewBox="0 0 14 14"><path d="M7 1L8.8 4.6L13 5.2L10 8L10.6 12.2L7 10.4L3.4 12.2L4 8L1 5.2L5.2 4.6L7 1Z" fill="currentColor" stroke="currentColor" stroke-width=".8" stroke-linejoin="round"/></svg>
-              {%- elsif rating_val >= i | minus: 0.5 -%}
+              {%- elsif rating_val >= half_val -%}
                 <svg class="star star--half" width="14" height="14" viewBox="0 0 14 14"><defs><linearGradient id="half"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="transparent"/></linearGradient></defs><path d="M7 1L8.8 4.6L13 5.2L10 8L10.6 12.2L7 10.4L3.4 12.2L4 8L1 5.2L5.2 4.6L7 1Z" fill="url(#half)" stroke="currentColor" stroke-width=".8" stroke-linejoin="round"/></svg>
               {%- else -%}
                 <svg class="star star--empty" width="14" height="14" viewBox="0 0 14 14"><path d="M7 1L8.8 4.6L13 5.2L10 8L10.6 12.2L7 10.4L3.4 12.2L4 8L1 5.2L5.2 4.6L7 1Z" fill="none" stroke="currentColor" stroke-width=".8" stroke-linejoin="round"/></svg>
