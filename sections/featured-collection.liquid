@@ -20,30 +20,40 @@
 
   <div class="bestsellers__grid">
     {%- if featured != blank -%}
-      {%- for product in featured.products limit: section.settings.products_to_show -%}
-        <a class="pcard" href="{{ product.url }}">
-          <div class="pcard__img">
-            {%- if product.featured_image != blank -%}
-              {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw' }}
-            {%- endif -%}
-            {%- if product.compare_at_price > product.price -%}
-              <span class="pcard__badge">Sale</span>
-            {%- endif -%}
-            {%- unless product.available -%}
-              <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
-            {%- endunless -%}
-            <div class="pcard__over">
-              <span class="pcard__qa">Quick View</span>
+      {%- comment -%} Deduplicate by product id — some collections can list the same product more than once. {%- endcomment -%}
+      {%- assign seen_ids = ',' -%}
+      {%- assign shown = 0 -%}
+      {%- assign max_show = section.settings.products_to_show -%}
+      {%- for product in featured.products -%}
+        {%- if shown >= max_show -%}{% break %}{%- endif -%}
+        {%- assign id_token = product.id | prepend: ',' | append: ',' -%}
+        {%- unless seen_ids contains id_token -%}
+          {%- assign seen_ids = seen_ids | append: product.id | append: ',' -%}
+          {%- assign shown = shown | plus: 1 -%}
+          <a class="pcard" href="{{ product.url }}">
+            <div class="pcard__img">
+              {%- if product.featured_image != blank -%}
+                {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw' }}
+              {%- endif -%}
+              {%- if product.compare_at_price > product.price -%}
+                <span class="pcard__badge">Sale</span>
+              {%- endif -%}
+              {%- unless product.available -%}
+                <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
+              {%- endunless -%}
+              <div class="pcard__over">
+                <span class="pcard__qa">Quick View</span>
+              </div>
             </div>
-          </div>
-          <p class="pcard__name">{{ product.title }}</p>
-          <p class="pcard__price">
-            {%- if product.compare_at_price > product.price -%}
-              <s>{{ product.compare_at_price | money }}</s>
-            {%- endif -%}
-            <strong>{{ product.price | money }}</strong>
-          </p>
-        </a>
+            <p class="pcard__name">{{ product.title }}</p>
+            <p class="pcard__price">
+              {%- if product.compare_at_price > product.price -%}
+                <s>{{ product.compare_at_price | money }}</s>
+              {%- endif -%}
+              <strong>{{ product.price | money }}</strong>
+            </p>
+          </a>
+        {%- endunless -%}
       {%- endfor -%}
     {%- else -%}
       {%- for i in (1..4) -%}

@@ -380,8 +380,11 @@ function initProductRecommendations() {
     .then(r => r.json())
     .then(data => {
       if (!data.products || data.products.length === 0) return;
+      const seen = new Set();
       let html = '';
       data.products.forEach(p => {
+        if (seen.has(p.id)) return;
+        seen.add(p.id);
         const img = p.featured_image ? `<img src="${p.featured_image}" loading="lazy" alt="${p.title}">` : '';
         const comparePrice = p.compare_at_price && p.compare_at_price > p.price
           ? `<s>₹${(p.compare_at_price / 100).toLocaleString('en-IN')}</s>` : '';

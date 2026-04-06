@@ -315,22 +315,31 @@
     <div class="prod-pg__also">
       <h3 class="prod-pg__also-title">You may also <em>love</em></h3>
       <div class="prod-pg__also-grid" id="ProductRecommendations" data-product-id="{{ product.id }}" data-section-id="{{ section.id }}">
-        {%- for rec in recommendations.products limit: 4 -%}
-          <a class="pcard" href="{{ rec.url }}">
-            <div class="pcard__img">
-              {%- if rec.featured_image != blank -%}
-                {{ rec.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: rec.title, sizes: '25vw' }}
-              {%- endif -%}
-              {%- if rec.compare_at_price > rec.price -%}
-                <span class="pcard__badge">Sale</span>
-              {%- endif -%}
-            </div>
-            <p class="pcard__name">{{ rec.title }}</p>
-            <p class="pcard__price">
-              {%- if rec.compare_at_price > rec.price -%}<s>{{ rec.compare_at_price | money }}</s>{%- endif -%}
-              <strong>{{ rec.price | money }}</strong>
-            </p>
-          </a>
+        {%- assign rec_seen = ',' -%}
+        {%- assign rec_shown = 0 -%}
+        {%- for rec in recommendations.products -%}
+          {%- if rec_shown >= 4 -%}{% break %}{%- endif -%}
+          {%- if rec.id == product.id -%}{% continue %}{%- endif -%}
+          {%- assign rec_tok = rec.id | prepend: ',' | append: ',' -%}
+          {%- unless rec_seen contains rec_tok -%}
+            {%- assign rec_seen = rec_seen | append: rec.id | append: ',' -%}
+            {%- assign rec_shown = rec_shown | plus: 1 -%}
+            <a class="pcard" href="{{ rec.url }}">
+              <div class="pcard__img">
+                {%- if rec.featured_image != blank -%}
+                  {{ rec.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: rec.title, sizes: '25vw' }}
+                {%- endif -%}
+                {%- if rec.compare_at_price > rec.price -%}
+                  <span class="pcard__badge">Sale</span>
+                {%- endif -%}
+              </div>
+              <p class="pcard__name">{{ rec.title }}</p>
+              <p class="pcard__price">
+                {%- if rec.compare_at_price > rec.price -%}<s>{{ rec.compare_at_price | money }}</s>{%- endif -%}
+                <strong>{{ rec.price | money }}</strong>
+              </p>
+            </a>
+          {%- endunless -%}
         {%- endfor -%}
       </div>
     </div>
