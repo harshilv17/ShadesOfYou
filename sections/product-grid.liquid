@@ -1,13 +1,130 @@
 {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
-<section class="coll">
-  <div class="coll__bar">
-    <p class="coll__count"><strong>{{ collection.products_count }}</strong> styles</p>
+<style>
+  .product-grid-wrapper {
+    background: var(--surface-low);
+    padding-bottom: 40px;
+  }
+  .product-grid-header {
+    background: var(--surface);
+    padding: 24px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--outline-ghost);
+  }
+  .product-grid-header h1 {
+    font-family: var(--font-heading);
+    font-size: 38px;
+    font-weight: 300;
+    margin-bottom: 8px;
+    color: var(--primary);
+  }
+  .product-grid-header p {
+    font-size: 13px;
+    color: var(--primary);
+    opacity: 0.6;
+  }
+  
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--outline-ghost);
+    position: sticky;
+    top: 60px; /* Below header */
+    z-index: 50;
+  }
+  .filter-btn, .sort-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+  .filter-btn:hover, .sort-btn:hover { opacity: 0.6; }
+  .filter-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--outline-ghost);
+  }
 
-    {%- if section.settings.enable_sorting -%}
-      <div class="coll__sort">
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    padding: 0 0 20px;
+    background: var(--surface-low);
+  }
+  @media (min-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); max-width: 1360px; margin: 0 auto; gap: 4px; padding-top: 4px; }
+  }
+  .product-grid-card {
+    background: var(--surface);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .product-grid-card:hover { opacity: 0.94; }
+  .product-grid-card:hover .grid-card-img { transform: scale(1.04); }
+  .grid-card-img-wrap {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--surface-low);
+  }
+  .grid-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .grid-card-info {
+    padding: 12px 14px 18px;
+  }
+  .grid-card-name {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--primary);
+  }
+  .grid-card-price {
+    font-family: var(--font-body);
+    font-size: 13px;
+    opacity: 0.6;
+    font-weight: 400;
+    color: var(--primary);
+  }
+</style>
+
+<div class="product-grid-wrapper">
+
+  <div class="product-grid-header">
+    <h1>{{ collection.title }}</h1>
+    <p>{{ collection.products_count }} Products</p>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn" id="filter-toggle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      Filter
+    </button>
+    <div class="filter-divider"></div>
+    <div class="coll__sort" style="display:flex;align-items:center;gap:6px">
         <label for="SortBy" class="visually-hidden">Sort by</label>
-        <select id="SortBy" name="sort_by" data-sort-select>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/></svg>
+        <select id="SortBy" name="sort_by" data-sort-select style="background:transparent;border:none;font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--primary);cursor:pointer;outline:none;">
           <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
           <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
           <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>A – Z</option>
@@ -16,11 +133,10 @@
           <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High to Low</option>
           <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
         </select>
-      </div>
-    {%- endif -%}
+    </div>
   </div>
 
-  <div class="coll__grid" id="ProductGrid">
+  <div class="product-grid" id="ProductGrid">
     {%- paginate collection.products by section.settings.products_per_page -%}
       {%- for product in collection.products -%}
         {%- render 'product-card', product: product -%}
@@ -35,7 +151,8 @@
       {%- endif -%}
     {%- endpaginate -%}
   </div>
-</section>
+
+</div>
 
 {% schema %}
 {

@@ -2,45 +2,39 @@
   Renders a product card.
   Accepts:
   - product: {Object} Product Liquid object
+  - is_small: {Boolean} Use small horizontal continuous scroll card layout
 {%- endcomment -%}
 
-<a class="pcard" href="{{ product.url }}">
-  <div class="pcard__img">
-    {%- if product.featured_image != blank -%}
-      {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw', class: 'pcard__img-primary' }}
-      {%- if product.media.size > 1 -%}
-        {{ product.media[1] | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw', class: 'pcard__img-hover' }}
+{%- if is_small -%}
+  <a class="product-card-sm" href="{{ product.url }}">
+    <div class="card-img-wrap">
+      {%- if product.featured_image != blank -%}
+        {{ product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy' }}
+      {%- else -%}
+        <div style="width:100%;height:100%;background:var(--surface-low)"></div>
       {%- endif -%}
-    {%- else -%}
-      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:48px;color:var(--dim)">
-        {{ product.title | slice: 0 | upcase }}
-      </div>
-    {%- endif -%}
-
-    {%- if product.compare_at_price > product.price -%}
-      <span class="pcard__badge">Sale</span>
-    {%- elsif product.available == false -%}
-      <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
-    {%- endif -%}
-
-    {%- assign total_inventory = 0 -%}
-    {%- for variant in product.variants -%}
-      {%- assign total_inventory = total_inventory | plus: variant.inventory_quantity -%}
-    {%- endfor -%}
-    {%- if product.available and total_inventory > 0 and total_inventory <= 3 -%}
-      <span class="pcard__badge pcard__badge--low">Only {{ total_inventory }} left</span>
-    {%- endif -%}
-
-    <div class="pcard__over">
-      <span class="pcard__qa">Quick View</span>
     </div>
-  </div>
-
-  <p class="pcard__name">{{ product.title }}</p>
-  <p class="pcard__price">
-    {%- if product.compare_at_price > product.price -%}
-      <s>{{ product.compare_at_price | money }}</s>
-    {%- endif -%}
-    <strong>{{ product.price | money }}</strong>
-  </p>
-</a>
+    <div class="card-name">{{ product.title }}</div>
+    <div class="card-price">
+      {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
+      {{ product.price | money }}
+    </div>
+  </a>
+{%- else -%}
+  <a class="product-grid-card" href="{{ product.url }}" style="text-decoration:none;">
+    <div class="grid-card-img-wrap">
+      {%- if product.featured_image != blank -%}
+        {{ product.featured_image | image_url: width: 600 | image_tag: class: 'grid-card-img', loading: 'lazy' }}
+      {%- else -%}
+        <div style="width:100%;height:100%;background:var(--surface-low)"></div>
+      {%- endif -%}
+    </div>
+    <div class="grid-card-info">
+      <div class="grid-card-name">{{ product.title }}</div>
+      <div class="grid-card-price">
+        {%- if product.compare_at_price > product.price -%}<s>{{ product.compare_at_price | money }}</s> {%- endif -%}
+        {{ product.price | money }}
+      </div>
+    </div>
+  </a>
+{%- endif -%}

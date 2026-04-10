@@ -1,16 +1,102 @@
+<style>
+  .footer {
+    background: var(--surface-low);
+    color: var(--primary);
+  }
+  .footer-strip {
+    background: var(--surface-dim);
+    padding: 16px 20px;
+    display: flex; gap: 20px; overflow-x: auto;
+    scrollbar-width: none; -ms-overflow-style: none;
+    font-family: var(--font-body); font-size: 11px;
+    font-weight: 600; letter-spacing: 0.1em;
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .footer-strip::-webkit-scrollbar { display: none; }
+  .footer-strip-item {
+    display: flex; align-items: center; gap: 8px; opacity: 0.8;
+  }
+  .footer-full {
+    padding: 64px 20px 100px; /* Extra padding for bottom nav */
+    display: grid; gap: 48px; max-width: 1360px; margin: 0 auto;
+  }
+  @media (min-width: 768px) {
+    .footer-full { grid-template-columns: 2fr 1fr 1fr; gap: 64px; padding-bottom: 64px; }
+    .footer-strip { justify-content: center; }
+  }
+  .footer-brand {
+    font-family: var(--font-heading); font-size: 24px; font-weight: 300;
+    margin-bottom: 16px; color: var(--primary);
+  }
+  .footer-desc {
+    font-size: 13px; line-height: 1.6; opacity: 0.7; max-width: 320px; margin-bottom: 24px;
+    color: var(--primary);
+  }
+  .footer-col-title {
+    font-family: var(--font-body); font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 24px;
+    color: var(--primary);
+  }
+  .footer-link {
+    display: block; font-size: 13px; color: var(--primary);
+    text-decoration: none; margin-bottom: 14px; opacity: 0.7; transition: opacity 0.2s;
+  }
+  .footer-link:hover { opacity: 1; text-decoration: underline; }
+  
+  .footer-bottom {
+    border-top: 1px solid var(--outline-ghost); padding-top: 24px;
+    display: flex; flex-direction: column; gap: 16px; text-align: center;
+    font-size: 12px; opacity: 0.5; color: var(--primary); align-items: center;
+  }
+  @media (min-width: 768px) {
+    .footer-bottom { flex-direction: row; justify-content: space-between; text-align: left; }
+  }
+
+  .footer-email-row {
+    display: flex; width: 100%; max-width: 320px; border-bottom: 1px solid rgba(59,35,20,0.3); padding-bottom: 6px;
+  }
+  .footer-email-in {
+    border: none; background: transparent; flex: 1; font-family: var(--font-body); font-size: 13px;
+    color: var(--primary); outline: none; padding: 4px 0;
+  }
+  .footer-email-in::placeholder { color: var(--primary); opacity: 0.5; }
+  .footer-email-btn {
+    background: none; border: none; font-family: var(--font-body); font-size: 11px;
+    font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--primary); cursor: pointer; opacity: 0.8;
+  }
+  .footer-email-btn:hover { opacity: 1; }
+</style>
+
 <footer class="footer" id="siteFooter">
-  <div class="footer__top">
+  <div class="footer-strip">
+    <div class="footer-strip-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+      Ethically Made
+    </div>
+    <div class="footer-strip-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+      Artisan Crafted
+    </div>
+    <div class="footer-strip-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+      Premium Fabrics
+    </div>
+  </div>
+  
+  <div class="footer-full">
     <div>
-      <a href="{{ routes.root_url }}" class="footer__logo">Shades <em>of</em> You</a>
-      <p class="footer__tagline">{{ section.settings.tagline }}</p>
+      <div class="footer-brand">{{ shop.name }}</div>
+      <p class="footer-desc">{{ section.settings.tagline }}</p>
+      
       {%- if section.settings.show_newsletter -%}
-        <p class="footer__newsletter-hook">Get 10% off your first order</p>
-        <p style="font-size:11px;color:rgba(255,255,255,.3);margin-top:2px">Plus early access to new drops & exclusive offers.</p>
+        <p class="footer-col-title" style="margin-bottom:8px">Join the Atelier</p>
+        <p style="font-size:12px;opacity:0.7;margin-bottom:16px;">Get 10% off your first order plus early access.</p>
         {%- form 'customer', id: 'FooterNewsletter' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
-          <div class="footer__email-row" style="margin-top:10px">
-            <input class="footer__email-in" type="email" name="contact[email]" placeholder="Your email" required>
-            <button class="footer__email-btn" type="submit">Get 10% Off</button>
+          <div class="footer-email-row">
+            <input class="footer-email-in" type="email" name="contact[email]" placeholder="Your email address" required>
+            <button class="footer-email-btn" type="submit">Subscribe</button>
           </div>
         {%- endform -%}
       {%- endif -%}
@@ -19,34 +105,34 @@
     {%- for block in section.blocks -%}
       <div {{ block.shopify_attributes }}>
         {%- if block.settings.heading != blank -%}
-          <span class="footer__col-title">{{ block.settings.heading }}</span>
+          <div class="footer-col-title">{{ block.settings.heading }}</div>
         {%- endif -%}
 
         {%- case block.type -%}
           {%- when 'link_list' -%}
             {%- if block.settings.menu != blank -%}
               {%- for link in block.settings.menu.links -%}
-                <a href="{{ link.url }}" class="footer__link">{{ link.title }}</a>
+                <a href="{{ link.url }}" class="footer-link">{{ link.title }}</a>
               {%- endfor -%}
             {%- endif -%}
           {%- when 'text' -%}
             {%- if block.settings.content != blank -%}
-              <div style="font-size:12.5px;font-weight:300;color:rgba(255,255,255,.45);line-height:1.65">
+              <div class="footer-desc">
                 {{ block.settings.content }}
               </div>
             {%- endif -%}
         {%- endcase -%}
       </div>
     {%- endfor -%}
-  </div>
-
-  <div class="footer__bottom">
-    <span class="footer__copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
-    <div class="footer__cards">
-      <span class="footer__card-tag">Visa</span>
-      <span class="footer__card-tag">Mastercard</span>
-      <span class="footer__card-tag">Amex</span>
-      <span class="footer__card-tag">UPI</span>
+    
+    <div class="footer-bottom" style="grid-column: 1 / -1;">
+      <span class="footer-copy">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.</span>
+      <div class="footer-cards" style="display:flex;gap:12px;opacity:0.6">
+        <span>VISA</span>
+        <span>MASTERCARD</span>
+        <span>AMEX</span>
+        <span>UPI</span>
+      </div>
     </div>
   </div>
 </footer>

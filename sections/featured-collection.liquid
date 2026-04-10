@@ -1,69 +1,76 @@
-{%- assign featured = section.settings.collection -%}
+<style>
+  .section-favourites {
+    padding: 64px 20px 48px;
+    background: var(--surface);
+  }
+  .scroll-row {
+    display: flex; gap: 14px; overflow-x: auto; padding-bottom: 8px;
+    scrollbar-width: none; -ms-overflow-style: none; scroll-snap-type: x mandatory;
+    position: relative;
+  }
+  .scroll-row::-webkit-scrollbar { display: none; }
+  .scroll-row-wrap { position: relative; }
+  .scroll-arrow {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 36px; height: 36px; background: var(--surface);
+    border: 1px solid var(--outline-ghost); border-radius: 0;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 5; box-shadow: -8px 0 20px rgba(253,249,241,0.8);
+    transition: all 0.2s;
+  }
+  .scroll-arrow:hover { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+  
+  .product-card-sm {
+    flex: 0 0 155px; cursor: pointer; scroll-snap-align: start; text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (min-width: 768px) {
+    .product-card-sm { flex: 0 0 180px; }
+  }
+  .product-card-sm:hover { transform: translateY(-3px); }
+  .product-card-sm:hover .card-img-wrap img { transform: scale(1.05); }
 
-<section class="bestsellers">
-  <div class="bestsellers__hd">
-    <div>
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="eyebrow">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="section-title bestsellers__title">{{ section.settings.heading }}</h2>
+  .card-img-wrap {
+    background: var(--surface-low); aspect-ratio: 3/4; overflow: hidden; margin-bottom: 10px;
+  }
+  .card-img-wrap img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-name {
+    font-family: var(--font-body); font-size: 13px; font-weight: 500; color: var(--primary);
+    margin-bottom: 3px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .card-price {
+    font-family: var(--font-body); font-size: 13px; color: var(--primary); opacity: 0.6; font-weight: 400;
+  }
+</style>
+
+<section class="section-favourites reveal">
+  <div class="section-head">
+    <span class="label-sm">{{ section.settings.eyebrow }}</span>
+    <span class="script">{{ section.settings.heading | strip_html }}</span>
+  </div>
+  <div class="scroll-row-wrap">
+    <div class="scroll-row" id="fav-scroll-{{ section.id }}">
+      {%- assign featured = section.settings.collection -%}
+      {%- if featured != blank -%}
+        {%- assign max_show = section.settings.products_to_show -%}
+        {%- for product in featured.products limit: max_show -%}
+          {%- render 'product-card', product: product, is_small: true -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..5) -%}
+          <div class="product-card-sm">
+            <div class="card-img-wrap">{{ 'product-' | append: i | placeholder_svg_tag: 'occ-img' }}</div>
+            <div class="card-name">Sample Product</div>
+            <div class="card-price">₹1,999</div>
+          </div>
+        {%- endfor -%}
       {%- endif -%}
     </div>
-    {%- if featured != blank -%}
-      <a href="{{ featured.url }}" class="bestsellers__viewall">
-        View all
-        <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M1 4.5H14M10 1L14 4.5L10 8" stroke="#A85B38" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    {%- endif -%}
-  </div>
-
-  <div class="bestsellers__grid">
-    {%- if featured != blank -%}
-      {%- comment -%} Deduplicate by product id — some collections can list the same product more than once. {%- endcomment -%}
-      {%- assign seen_ids = ',' -%}
-      {%- assign shown = 0 -%}
-      {%- assign max_show = section.settings.products_to_show -%}
-      {%- for product in featured.products -%}
-        {%- if shown >= max_show -%}{% break %}{%- endif -%}
-        {%- assign id_token = product.id | prepend: ',' | append: ',' -%}
-        {%- unless seen_ids contains id_token -%}
-          {%- assign seen_ids = seen_ids | append: product.id | append: ',' -%}
-          {%- assign shown = shown | plus: 1 -%}
-          <a class="pcard" href="{{ product.url }}">
-            <div class="pcard__img">
-              {%- if product.featured_image != blank -%}
-                {{ product.featured_image | image_url: width: 720 | image_tag: loading: 'lazy', alt: product.title, sizes: '(min-width: 1024px) 25vw, (min-width: 700px) 33vw, 50vw' }}
-              {%- endif -%}
-              {%- if product.compare_at_price > product.price -%}
-                <span class="pcard__badge">Sale</span>
-              {%- endif -%}
-              {%- unless product.available -%}
-                <span class="pcard__badge pcard__badge--sold-out">Sold Out</span>
-              {%- endunless -%}
-              <div class="pcard__over">
-                <span class="pcard__qa">Quick View</span>
-              </div>
-            </div>
-            <p class="pcard__name">{{ product.title }}</p>
-            <p class="pcard__price">
-              {%- if product.compare_at_price > product.price -%}
-                <s>{{ product.compare_at_price | money }}</s>
-              {%- endif -%}
-              <strong>{{ product.price | money }}</strong>
-            </p>
-          </a>
-        {%- endunless -%}
-      {%- endfor -%}
-    {%- else -%}
-      {%- for i in (1..4) -%}
-        <div class="pcard">
-          <div class="pcard__img" style="display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:48px;color:var(--dim)">{{ i }}</div>
-          <p class="pcard__name">Sample Product {{ i }}</p>
-          <p class="pcard__price"><strong>₹2,599</strong></p>
-        </div>
-      {%- endfor -%}
-    {%- endif -%}
+    <button class="scroll-arrow" onclick="document.getElementById('fav-scroll-{{ section.id }}').scrollBy({ left: 170, behavior: 'smooth' });" aria-label="Scroll right">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
   </div>
 </section>
 
@@ -77,14 +84,14 @@
       "type": "richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "<p>Most <em>Loved</em></p>"
+      "default": "<p>Most Loved</p>"
     },
     { "type": "collection", "id": "collection", "label": "Collection" },
     {
       "type": "range",
       "id": "products_to_show",
       "label": "Products to show",
-      "min": 2, "max": 12, "step": 2, "default": 4
+      "min": 4, "max": 16, "step": 1, "default": 8
     }
   ],
   "presets": [
