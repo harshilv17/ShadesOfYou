@@ -11,38 +11,13 @@
   "sections": {
     "hero": {
       "type": "hero",
-      "blocks": {
-        "slide_ikLAhQ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/1.jpg"
-          }
-        },
-        "slide_HtVLeQ": {
-          "type": "slide",
-          "settings": {}
-        },
-        "slide-2": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Lucid_Origin_Create_an_image_of_two_stylish_south_asian_women__2.jpg"
-          }
-        }
-      },
-      "block_order": [
-        "slide_ikLAhQ",
-        "slide_HtVLeQ",
-        "slide-2"
-      ],
       "settings": {
-        "season_text": "Spring Collection · Handcrafted Batik",
         "heading": "<p>Crafted<br/>by hand.<br/><em>Made</em><br/>for you.</p>",
         "subheading": "Premium everyday ethnic wear in handcrafted batik. Where traditional craft meets modern living — designed to move with you.",
         "cta_label": "Shop Now",
         "cta_url": "",
         "cta2_label": "Discover Batik",
-        "cta2_url": "",
-        "image_label": "New Arrivals · 2025"
+        "cta2_url": ""
       }
     },
     "marquee": {
@@ -95,47 +70,44 @@
       ],
       "settings": {}
     },
+    "featured-collection": {
+      "type": "featured-collection",
+      "settings": {
+        "eyebrow": "Customer Favourites",
+        "heading": "<p>Most <em>Loved</em></p>",
+        "collection": "best-sellers",
+        "products_to_show": 4
+      }
+    },
     "occasion-grid": {
       "type": "occasion-grid",
       "blocks": {
         "workday": {
           "type": "occasion_card",
           "settings": {
-            "label": "Everyday Edit",
             "title": "Work DayWear",
-            "description": "Breathable, polished, easy to move in — from first meeting to last chai.",
-            "url": "",
-            "half_height": false
+            "url": ""
           }
         },
         "festive": {
           "type": "occasion_card",
           "settings": {
-            "label": "Festive Season",
             "title": "Puja &<br>Festive",
-            "description": "Handcrafted prints that feel ceremonial without being stiff.",
-            "url": "",
-            "half_height": false
+            "url": ""
           }
         },
         "weekend": {
           "type": "occasion_card",
           "settings": {
-            "label": "Off-Duty",
             "title": "Weekend Easy",
-            "description": "For slow Sundays and spontaneous plans alike.",
-            "url": "",
-            "half_height": false
+            "url": ""
           }
         },
         "gift": {
           "type": "occasion_card",
           "settings": {
-            "label": "Thoughtful Giving",
             "title": "Gift with Love",
-            "description": "Our most-gifted pieces — chosen to feel personal.",
-            "url": "",
-            "half_height": false
+            "url": ""
           }
         }
       },
@@ -146,21 +118,7 @@
         "gift"
       ],
       "settings": {
-        "eyebrow": "Curated for you",
-        "heading": "<p>The <em>Occasion</em><br/>Edit</p>",
-        "subheading": "Not sure where to start? Let your occasion guide you — every piece, handcrafted for exactly that moment.",
-        "footer_note": "Every piece is handcrafted. No two are exactly alike.",
-        "view_all_label": "See all styles",
-        "view_all_url": ""
-      }
-    },
-    "featured-collection": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Customer Favourites",
-        "heading": "<p>Most <em>Loved</em></p>",
-        "collection": "",
-        "products_to_show": 4
+        "heading": "<p>The <em>Occasion</em><br>Edit</p>"
       }
     },
     "testimonials": {
