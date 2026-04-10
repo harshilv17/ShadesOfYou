@@ -7,5 +7,7 @@
       }
     }
   },
-  "order": ["main-product"]
+  "order": [
+    "main-product"
+  ]
 }

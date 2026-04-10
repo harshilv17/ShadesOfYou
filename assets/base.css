@@ -9,18 +9,38 @@
 html { scroll-behavior: smooth; }
 
 :root {
-  --cream:  #F9F5EF;
-  --ink:    #1E1A16;
-  --rust:   #A85B38;
+  /* ══════════════════════════════════════════════
+     DESIGN TOKENS — The Digital Atelier
+  ══════════════════════════════════════════════ */
+  --primary:              #3B2314;
+  --background:           #f7f3eb;
+  --surface:              #fdf9f1;
+  --surface-low:          #f2ece0;
+  --surface-dim:          #e8e0d0;
+  --accent:               #c28e6b;
+  --on-primary:           #fdf9f1;
+  --outline-ghost:        rgba(59,35,20,0.15);
+  --shadow-ambient:       rgba(55,38,25,0.04);
+  --sage:                 #8a9e7e;
+  --brown:                #7a5c3e;
+
+  /* Typography */
+  --font-serif:           'Noto Serif', Georgia, serif;
+  --font-sans:            'Manrope', system-ui, sans-serif;
+
+  /* Legacy aliases to support existing sections */
+  --cream:  var(--background);
+  --ink:    var(--primary);
+  --rust:   var(--accent);
   --rust-l: #C47A55;
-  --sand:   #E5D9CA;
+  --sand:   var(--surface-dim);
   --dim:    #7A6E65;
   --muted:  #9A8E84;
-  --border: #E5DACF;
+  --border: var(--outline-ghost);
   --dark:   #16120E;
 
-  --font-heading: 'Cormorant Garamond', Georgia, serif;
-  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-heading: var(--font-serif);
+  --font-body:    var(--font-sans);
 
   --page-width: 1360px;
   --gutter:     20px;
@@ -31,10 +51,10 @@ html { scroll-behavior: smooth; }
 }
 
 body {
-  background: var(--cream);
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--ink);
+  background: var(--background);
+  color: var(--primary);
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
@@ -1756,4 +1776,76 @@ ul, ol { list-style: none; }
 .main-page__title {
   font-family: var(--font-heading);
   font-size: clamp(28px,3vw,44px); font-weight: 300; margin-bottom: 32px;
+}
+
+/* ══════════════════════════════════════════════
+   DIGITAL ATELIER PROTOTYPE ADDITIONS
+══════════════════════════════════════════════ */
+
+/* ── BUTTONS ── */
+.btn-primary {
+  background: var(--primary); color: var(--on-primary);
+  border: none; padding: 16px 30px; font-family: var(--font-body);
+  font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer; border-radius: 0;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.25s ease; position: relative; overflow: hidden;
+  text-decoration: none; max-width: max-content;
+}
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+  transform: translateX(-100%); transition: transform 0.5s;
+}
+.btn-primary:hover { opacity: 0.88; }
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  background: transparent; color: var(--primary);
+  border: 1px solid var(--outline-ghost); padding: 16px 30px;
+  font-family: var(--font-body); font-size: 11.5px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  border-radius: 0; transition: all 0.25s ease; text-decoration: none;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; max-width: max-content;
+}
+.btn-secondary:hover { border-color: var(--primary); background: rgba(59,35,20,0.03); }
+.btn-secondary:active { transform: scale(0.98); }
+
+/* ── TOAST NOTIFICATION ── */
+.toast {
+  position: fixed; bottom: 90px; left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--primary); color: var(--on-primary);
+  padding: 14px 28px; font-size: 13px; font-weight: 500;
+  letter-spacing: 0.02em; z-index: 200; opacity: 0; pointer-events: none;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1); white-space: nowrap;
+}
+.toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(253,249,241,0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  display: flex; justify-content: space-around; padding: 12px 0 18px;
+  box-shadow: 0 -40px 40px rgba(55,38,25,0.04); z-index: 100;
+}
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: none; border: none; cursor: pointer; color: var(--primary);
+  opacity: 0.4; transition: opacity 0.25s; font-family: var(--font-body);
+  font-size: 10.5px; font-weight: 500; letter-spacing: 0.02em; text-decoration: none;
+}
+.bottom-nav-item.active { opacity: 1; }
+.bottom-nav-item:hover { opacity: 0.8; }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+
+/* ── COMMON LABELS ── */
+.label-sm { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--primary); }
+.section-head { text-align: center; margin-bottom: 48px; }
+.section-head .label-sm { display: block; margin-bottom: 6px; }
+.section-head .script { font-family: var(--font-heading); font-style: italic; color: var(--accent); font-size: 20px; font-weight: 300; }
+
+@media (min-width: 768px) {
+  .bottom-nav { display: none; }
 }

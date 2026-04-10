@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shades of You — Handcrafted Ethnic Wear</title>
+<meta name="description" content="Premium everyday ethnic wear in handcrafted batik. Where traditional craft meets modern living. Discover artisan-made kurta sets, dupattas & juttis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Shopify Storefront Web Components -->
+<script type="module" src="https://cdn.shopify.com/storefront/web-components.js"></script>
+
+<style>
+  /* ══════════════════════════════════════════════
+     DESIGN TOKENS — The Digital Atelier
+  ══════════════════════════════════════════════ */
+  :root {
+    /* Colors */
+    --primary:              #3B2314;
+    --background:           #f7f3eb;
+    --surface:              #fdf9f1;
+    --surface-low:          #f2ece0;
+    --surface-dim:          #e8e0d0;
+    --accent:               #c28e6b;
+    --on-primary:           #fdf9f1;
+    --outline-ghost:        rgba(59,35,20,0.15);
+    --shadow-ambient:       rgba(55,38,25,0.04);
+    --sage:                 #8a9e7e;
+    --brown:                #7a5c3e;
+
+    /* Typography */
+    --font-serif:           'Noto Serif', Georgia, serif;
+    --font-sans:            'Manrope', system-ui, sans-serif;
+
+    /* Spacing */
+    --space-xs:  4px;
+    --space-sm:  8px;
+    --space-md:  16px;
+    --space-lg:  24px;
+    --space-xl:  32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+  }
+
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  img { display: block; max-width: 100%; }
+  button { font-family: var(--font-sans); }
+
+  /* ── SCREEN ROUTING ── */
+  .screen { display: none; min-height: 100vh; }
+  .screen.active { display: block; animation: screenIn 0.4s cubic-bezier(0.22, 1, 0.36, 1); }
+  @keyframes screenIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ANNOUNCEMENT BAR ── */
+  .announce-bar {
+    background: var(--primary);
+    color: var(--on-primary);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-align: center;
+    padding: 11px var(--space-md);
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    padding: var(--space-md) 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 40px 40px var(--shadow-ambient);
+    transition: box-shadow 0.3s ease;
+  }
+  .header-logo {
+    font-family: var(--font-serif);
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    color: var(--primary);
+    text-decoration: none;
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+  .header-logo:hover { opacity: 0.7; }
+  .header-icons { display: flex; gap: 18px; align-items: center; }
+  .header-icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--primary); padding: 6px; display: flex;
+    font-size: 18px; line-height: 1;
+    transition: opacity 0.2s;
+    position: relative;
+  }
+  .header-icon-btn:hover { opacity: 0.6; }
+  .header-back {
+    background: none; border: none; cursor: pointer;
+    font-size: 20px; color: var(--primary); padding: 6px;
+    display: flex; align-items: center;
+    transition: opacity 0.2s;
+  }
+  .header-back:hover { opacity: 0.6; }
+
+  /* Cart badge */
+  .cart-badge {
+    position: absolute;
+    top: 0; right: 0;
+    width: 16px; height: 16px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .cart-badge.visible { opacity: 1; transform: scale(1); }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    padding: 16px 30px;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary:hover::after { transform: translateX(100%); }
+  .btn-primary:active { transform: scale(0.98); }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--outline-ghost);
+    padding: 16px 30px;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.25s ease;
+  }
+  .btn-secondary:hover { border-color: var(--primary); background: rgba(59,35,20,0.03); }
+  .btn-secondary:active { transform: scale(0.98); }
+
+  /* ── LABEL STYLE ── */
+  .label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--primary);
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-head {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+  .section-head .label { display: block; margin-bottom: 6px; }
+  .section-head .script {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--accent);
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  /* ══════════════════════════════════════════════
+     SCREEN 1 — HOMEPAGE
+  ══════════════════════════════════════════════ */
+
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 480px;
+    background: #d4b896;
+  }
+  .hero-img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    transition: transform 8s ease;
+  }
+  .hero:hover .hero-img { transform: scale(1.03); }
+
+  .hero-card {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--background);
+    padding: 30px 24px 36px;
+  }
+  @media (min-width: 600px) {
+    .hero-card {
+      bottom: 40px;
+      left: 24px;
+      right: auto;
+      width: 380px;
+      background: rgba(247, 243, 235, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  }
+  .hero-headline {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 300;
+    line-height: 1.18;
+    margin-bottom: 14px;
+    color: var(--primary);
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-subtext {
+    font-size: 14px;
+    line-height: 1.65;
+    letter-spacing: 0.02em;
+    color: var(--primary);
+    opacity: 0.7;
+    margin-bottom: var(--space-lg);
+  }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Customer Favourites */
+  .section-favourites {
+    padding: var(--space-3xl) 20px var(--space-2xl);
+    background: var(--surface);
+  }
+  .scroll-row {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: var(--space-sm);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    position: relative;
+  }
+  .scroll-row::-webkit-scrollbar { display: none; }
+  .scroll-row-wrap {
+    position: relative;
+  }
+  .scroll-arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: var(--surface);
+    border: 1px solid var(--outline-ghost);
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: -8px 0 20px rgba(253,249,241,0.8);
+    transition: all 0.2s;
+  }
+  .scroll-arrow:hover { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+
+  /* Product card styles for dynamic Shopify products */
+  .product-card-sm {
+    flex: 0 0 155px;
+    cursor: pointer;
+    scroll-snap-align: start;
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .product-card-sm:hover { transform: translateY(-3px); }
+  .product-card-sm:hover .card-img-wrap img,
+  .product-card-sm:hover .card-img-wrap shopify-media { transform: scale(1.05); }
+
+  .card-img-wrap {
+    background: var(--surface-low);
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .card-img-wrap img,
+  .card-img-wrap shopify-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card-img-wrap shopify-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary);
+    margin-bottom: 3px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-price {
+    font-size: 13px;
+    color: var(--primary);
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  /* Shop by Occasion */
+  .section-occasion {
+    padding: var(--space-3xl) 20px var(--space-2xl);
+    background: var(--background);
+  }
+  .occasion-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .occasion-card {
+    position: relative;
+    aspect-ratio: 1/1;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .occasion-card:hover .occ-img { transform: scale(1.06); }
+  .occ-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    display: block;
+  }
+  .occ-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(59,35,20,0.6) 0%, transparent 60%);
+    display: flex;
+    align-items: flex-end;
+    padding: 18px;
+    transition: background 0.3s;
+  }
+  .occasion-card:hover .occ-overlay {
+    background: linear-gradient(to top, rgba(59,35,20,0.7) 0%, transparent 65%);
+  }
+  .occ-label {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(59,35,20,0.25);
+  }
+
+  /* Footer strip */
+  .footer-strip {
+    padding: 30px 20px;
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .footer-strip-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--primary);
+    opacity: 0.65;
+    line-height: 1.5;
+    flex: 1;
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+  .footer-strip-left::before {
+    content: '';
+    width: 36px;
+    height: 1px;
+    background: var(--primary);
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .footer-strip-link {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 2px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: var(--font-sans);
+    transition: opacity 0.2s;
+  }
+  .footer-strip-link:hover { opacity: 0.7; }
+
+  /* Full Footer */
+  .footer-full {
+    background: var(--primary);
+    color: var(--on-primary);
+    padding: var(--space-3xl) 20px var(--space-xl);
+  }
+  .footer-brand {
+    font-family: var(--font-serif);
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: var(--space-md);
+  }
+  .footer-tagline {
+    font-size: 13px;
+    opacity: 0.5;
+    line-height: 1.6;
+    margin-bottom: var(--space-xl);
+    max-width: 260px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+  }
+  .footer-col-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: var(--space-md);
+    opacity: 0.4;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--on-primary);
+    text-decoration: none;
+    font-size: 13.5px;
+    margin-bottom: 10px;
+    opacity: 0.65;
+    transition: opacity 0.2s;
+  }
+  .footer-col a:hover { opacity: 1; }
+  .footer-bottom {
+    border-top: 1px solid rgba(253,249,241,0.1);
+    padding-top: var(--space-lg);
+    font-size: 11.5px;
+    opacity: 0.3;
+    text-align: center;
+  }
+
+  /* ══════════════════════════════════════════════
+     SCREEN 2 — PRODUCT LISTING
+  ══════════════════════════════════════════════ */
+
+  .listing-hero-title {
+    padding: var(--space-xl) 20px var(--space-lg);
+    background: var(--surface);
+  }
+  .listing-hero-title h1 {
+    font-family: var(--font-serif);
+    font-size: 38px;
+    font-weight: 300;
+    text-align: center;
+  }
+  .listing-hero-title h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--surface);
+    border-top: 1px solid var(--outline-ghost);
+    border-bottom: 1px solid var(--outline-ghost);
+    position: sticky;
+    top: 58px;
+    z-index: 50;
+  }
+  .filter-btn, .sort-btn {
+    background: none;
+    border: none;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s;
+  }
+  .filter-btn:hover, .sort-btn:hover { opacity: 0.6; }
+  .filter-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--outline-ghost);
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    padding: 0 0 20px;
+    background: var(--surface-low);
+  }
+  .product-grid-card {
+    background: var(--surface);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .product-grid-card:hover { opacity: 0.94; }
+  .product-grid-card:hover .grid-card-img-wrap shopify-media img { transform: scale(1.04); }
+  .grid-card-img-wrap {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--surface-low);
+  }
+  .grid-card-img-wrap shopify-media {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .grid-card-img-wrap shopify-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .grid-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .grid-card-info {
+    padding: 12px 14px 18px;
+  }
+  .grid-card-name {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .grid-card-price {
+    font-size: 13px;
+    opacity: 0.6;
+    font-weight: 400;
+  }
+
+  /* Bottom Nav */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(253,249,241,0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0 18px;
+    box-shadow: 0 -40px 40px rgba(55,38,25,0.04);
+    z-index: 100;
+  }
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    opacity: 0.4;
+    transition: opacity 0.25s;
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .bottom-nav-item.active { opacity: 1; }
+  .bottom-nav-item:hover { opacity: 0.8; }
+  .bottom-nav-item svg { width: 22px; height: 22px; }
+
+  /* ══════════════════════════════════════════════
+     PRODUCT DETAIL MODAL (Shopify-powered)
+  ══════════════════════════════════════════════ */
+
+  .product-modal {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    width: 100%;
+    height: 100%;
+    background: var(--surface);
+    overflow-y: auto;
+  }
+  .product-modal::backdrop {
+    background-color: rgba(59, 35, 20, 0.5);
+  }
+  @media (min-width: 768px) {
+    .product-modal {
+      border-radius: 12px;
+      max-width: 860px;
+      max-height: 90vh;
+      width: 90%;
+      height: auto;
+      margin: auto;
+    }
+  }
+
+  .product-modal__close-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 10;
+  }
+  .product-modal__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: 22px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .product-modal__close:hover { opacity: 1; }
+
+  .product-modal__layout {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  @media (min-width: 768px) {
+    .product-modal__layout {
+      flex-direction: row;
+      gap: 0;
+    }
+  }
+
+  .product-modal__media {
+    background: var(--surface-low);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px;
+    min-height: 340px;
+  }
+  @media (min-width: 768px) {
+    .product-modal__media {
+      flex: 1;
+      min-height: 480px;
+      padding: 32px;
+    }
+  }
+  .product-modal__media shopify-media {
+    display: block;
+    max-width: 320px;
+    width: 100%;
+  }
+  .product-modal__media shopify-media img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0;
+  }
+
+  .product-modal__details {
+    padding: var(--space-lg) 20px var(--space-2xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+  @media (min-width: 768px) {
+    .product-modal__details {
+      flex: 1;
+      padding: var(--space-xl) var(--space-xl) var(--space-2xl);
+      overflow-y: auto;
+    }
+  }
+
+  .product-modal__vendor {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--primary);
+    opacity: 0.4;
+  }
+  .product-modal__title {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--primary);
+    margin-top: 4px;
+  }
+  .product-modal__price {
+    font-size: 19px;
+    font-weight: 500;
+    color: var(--primary);
+    letter-spacing: 0.01em;
+  }
+
+  .product-modal__buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .product-modal__add-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: 2px solid var(--primary);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-modal__add-btn:hover { opacity: 0.88; }
+  .product-modal__add-btn:active { transform: scale(0.99); }
+  .product-modal__add-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .product-modal__buy-btn {
+    width: 100%;
+    padding: 18px;
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--outline-ghost);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all 0.25s ease;
+  }
+  .product-modal__buy-btn:hover { border-color: var(--primary); background: rgba(59,35,20,0.03); }
+  .product-modal__buy-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .product-modal__description {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--primary);
+    opacity: 0.65;
+    letter-spacing: 0.02em;
+  }
+  .product-modal__description p {
+    margin: 0 0 8px;
+  }
+
+  /* ══════════════════════════════════════════════
+     SHOPIFY VARIANT SELECTOR STYLING
+  ══════════════════════════════════════════════ */
+
+  shopify-variant-selector::part(form) {
+    flex-direction: column;
+    gap: 16px;
+  }
+  shopify-variant-selector::part(label) {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary);
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+  shopify-variant-selector::part(radio) {
+    border: 1px solid var(--outline-ghost);
+    background: transparent;
+    color: var(--primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 18px;
+    border-radius: 0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 48px;
+    text-align: center;
+  }
+  shopify-variant-selector::part(radio):hover {
+    border-color: var(--primary);
+  }
+  shopify-variant-selector::part(radio-selected) {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: var(--primary);
+  }
+  shopify-variant-selector::part(radio-disabled) {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  shopify-variant-selector::part(color-swatch) {
+    width: 32px;
+    height: 32px;
+    border-radius: 0;
+    border: 2px solid var(--outline-ghost);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  shopify-variant-selector::part(color-swatch-selected) {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--primary);
+  }
+  shopify-variant-selector::part(select) {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    padding: 12px 16px;
+    border: 1px solid var(--outline-ghost);
+    border-radius: 0;
+    background: transparent;
+    color: var(--primary);
+    cursor: pointer;
+  }
+
+  /* ══════════════════════════════════════════════
+     SHOPIFY CART STYLING
+  ══════════════════════════════════════════════ */
+
+  shopify-cart::part(dialog) {
+    border-radius: 0;
+    border: none;
+    max-width: 420px;
+    font-family: var(--font-sans);
+    background: var(--surface);
+    color: var(--primary);
+  }
+  shopify-cart::part(line-heading) {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--primary);
+  }
+  shopify-cart::part(line-image) {
+    border-radius: 0;
+  }
+  shopify-cart::part(line-price) {
+    font-weight: 500;
+    color: var(--primary);
+  }
+  shopify-cart::part(primary-button) {
+    background-color: var(--primary);
+    border: 0;
+    border-radius: 0;
+    color: var(--on-primary);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 16px;
+    transition: opacity 0.25s;
+  }
+  shopify-cart::part(primary-button):hover {
+    opacity: 0.88;
+  }
+  shopify-cart::part(secondary-button) {
+    background-color: var(--surface);
+    color: var(--primary);
+    fill: var(--primary);
+    border: 1px solid var(--outline-ghost);
+    border-radius: 0;
+    font-family: var(--font-sans);
+    transition: all 0.2s;
+  }
+  shopify-cart::part(secondary-button):hover {
+    border-color: var(--primary);
+  }
+
+  /* ── TOAST NOTIFICATION ── */
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--primary);
+    color: var(--on-primary);
+    padding: 14px 28px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    white-space: nowrap;
+  }
+  .toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── SLIDE-IN MENU ── */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(59,35,20,0.4);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .menu-overlay.open { opacity: 1; pointer-events: all; }
+  .slide-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background: var(--surface);
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: var(--space-3xl) var(--space-lg);
+    overflow-y: auto;
+  }
+  .slide-menu.open { transform: translateX(0); }
+  .menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--primary);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  .menu-close:hover { opacity: 1; }
+  .menu-brand {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: var(--space-2xl);
+    color: var(--primary);
+  }
+  .menu-link {
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--outline-ghost);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .menu-link:hover { opacity: 0.6; }
+  .menu-link:first-of-type { border-top: 1px solid var(--outline-ghost); }
+
+  /* ── Loading placeholders ── */
+  .loading-skeleton {
+    background: var(--surface-low);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+  .loading-card {
+    flex: 0 0 155px;
+    scroll-snap-align: start;
+  }
+  .loading-card-img {
+    aspect-ratio: 3/4;
+    background: var(--surface-low);
+    margin-bottom: 10px;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .loading-card-text {
+    height: 12px;
+    width: 80%;
+    background: var(--surface-low);
+    margin-bottom: 6px;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .loading-card-price {
+    height: 12px;
+    width: 50%;
+    background: var(--surface-low);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .loading-grid-card {
+    background: var(--surface);
+  }
+  .loading-grid-img {
+    aspect-ratio: 3/4;
+    background: var(--surface-low);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .loading-grid-info {
+    padding: 12px 14px 18px;
+  }
+  .loading-grid-text {
+    height: 12px;
+    width: 75%;
+    background: var(--surface-low);
+    margin-bottom: 6px;
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .loading-grid-price-bar {
+    height: 12px;
+    width: 40%;
+    background: var(--surface-low);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  /* ── UTILITY ── */
+  .pb-nav { padding-bottom: 80px; }
+
+  /* ── RESPONSIVE ── */
+  @media (min-width: 768px) {
+    .hero { min-height: 560px; }
+    .hero-img { height: 560px; }
+    .hero-headline { font-size: 40px; }
+    .product-card-sm { flex: 0 0 180px; }
+    .occasion-grid { gap: 14px; }
+    .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  @media (min-width: 1024px) {
+    .product-grid { grid-template-columns: repeat(3, 1fr); }
+    .occasion-grid { grid-template-columns: repeat(4, 1fr); }
+    .occasion-card { aspect-ratio: 4/5; }
+  }
+
+  /* Scroll reveal animation */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SHOPIFY STORE CONFIGURATION
+═══════════════════════════════════════════ -->
+<shopify-store
+  store-domain="soy-8297.myshopify.com"
+  public-access-token="46b3ba5c5ab5b9754813356955c0fd18"
+  country="IN"
+  language="EN">
+</shopify-store>
+
+<!-- ═══════════════════════════════════════════
+     SHOPIFY CART (Native Component)
+═══════════════════════════════════════════ -->
+<shopify-cart id="main-cart">
+  <div slot="empty" style="font-family: var(--font-serif); font-size: 18px; text-align: center; padding: 40px 20px; color: var(--primary); opacity: 0.5;">
+    Your bag is empty
+  </div>
+  <div slot="checkout-button">PROCEED TO CHECKOUT</div>
+</shopify-cart>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE-IN MENU
+═══════════════════════════════════════════ -->
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<nav class="slide-menu" id="slide-menu">
+  <button class="menu-close" onclick="closeMenu()">✕</button>
+  <div class="menu-brand">Shades of You</div>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-home')">Home</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">New Arrivals</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">Kurta Sets</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">Festive Collection</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">Work Wear</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">Dupattas</a>
+  <a class="menu-link" onclick="closeMenu(); navigate('screen-listing')">Juttis</a>
+  <a class="menu-link" onclick="closeMenu()">Our Story</a>
+  <a class="menu-link" onclick="closeMenu()">Craft Journal</a>
+  <a class="menu-link" onclick="closeMenu()">Contact</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     TOAST NOTIFICATION
+═══════════════════════════════════════════ -->
+<div class="toast" id="toast">Added to bag ✓</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PRODUCT DETAIL MODAL (Shopify-Powered)
+═══════════════════════════════════════════ -->
+<dialog id="product-modal" class="product-modal">
+  <shopify-context id="product-modal-context" type="product" wait-for-update>
+    <template>
+      <div class="product-modal__close-bar">
+        <span class="product-modal__vendor">
+          <shopify-data query="product.vendor"></shopify-data>
+        </span>
+        <button class="product-modal__close" onclick="getElementById('product-modal').close();">✕</button>
+      </div>
+      <div class="product-modal__layout">
+        <div class="product-modal__media">
+          <shopify-media width="400" height="500" query="product.selectedOrFirstAvailableVariant.image"></shopify-media>
+        </div>
+        <div class="product-modal__details">
+          <div>
+            <h1 class="product-modal__title">
+              <shopify-data query="product.title"></shopify-data>
+            </h1>
+            <div class="product-modal__price" style="margin-top: 8px;">
+              <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money>
+            </div>
+          </div>
+
+          <shopify-variant-selector></shopify-variant-selector>
+
+          <div class="product-modal__buttons">
+            <button
+              class="product-modal__add-btn"
+              onclick="getElementById('main-cart').addLine(event).showModal(); getElementById('product-modal').close();"
+              shopify-attr--disabled="!product.selectedOrFirstAvailableVariant.availableForSale">
+              ADD TO BAG
+            </button>
+            <button
+              class="product-modal__buy-btn"
+              onclick="document.querySelector('shopify-store').buyNow(event)"
+              shopify-attr--disabled="!product.selectedOrFirstAvailableVariant.availableForSale">
+              BUY NOW
+            </button>
+          </div>
+
+          <div class="product-modal__description">
+            <shopify-data query="product.descriptionHtml"></shopify-data>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div shopify-loading-placeholder style="display: flex; align-items: center; justify-content: center; min-height: 300px; font-family: var(--font-serif); font-size: 16px; color: var(--primary); opacity: 0.4;">
+      Loading product...
+    </div>
+  </shopify-context>
+</dialog>
+
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 1: HOMEPAGE
+═══════════════════════════════════════════ -->
+<div class="screen active" id="screen-home">
+  <div class="announce-bar">Free Shipping on Orders Above ₹999 &nbsp;·&nbsp; COD Available</div>
+  <header class="header" id="header-home">
+    <button class="header-icon-btn" id="menu-toggle" onclick="openMenu()" aria-label="Open menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a class="header-logo" onclick="navigate('screen-home')">Shades of You</a>
+    <div class="header-icons">
+      <button class="header-icon-btn" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="header-icon-btn" onclick="document.getElementById('main-cart').showModal()" aria-label="Open Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <img class="hero-img" src="../images/hero-model.png" alt="Model wearing handcrafted batik kurta set" width="800" height="500">
+    <div class="hero-card">
+      <h1 class="hero-headline">Crafted by hand. Made for <em>you.</em></h1>
+      <p class="hero-subtext">Premium everyday ethnic wear in handcrafted batik. Where traditional craft meets modern living.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="navigate('screen-listing')">SHOP NEW →</button>
+        <button class="btn-secondary" onclick="navigate('screen-listing')">EXPLORE COLLECTIONS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Favourites — Dynamic from Shopify -->
+  <section class="section-favourites reveal" id="fav-section">
+    <div class="section-head">
+      <span class="label">Customer Favourites</span>
+      <span class="script">Most Loved</span>
+    </div>
+    <div class="scroll-row-wrap">
+      <div class="scroll-row" id="fav-scroll">
+        <shopify-list-context type="product" query="products" first="8">
+          <template>
+            <div class="product-card-sm" onclick="showProductDetails(event)">
+              <div class="card-img-wrap">
+                <shopify-media width="280" height="373" query="product.selectedOrFirstAvailableVariant.image"></shopify-media>
+              </div>
+              <div class="card-name">
+                <shopify-data query="product.title"></shopify-data>
+              </div>
+              <div class="card-price">
+                <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money>
+              </div>
+            </div>
+          </template>
+          <!-- Loading placeholders -->
+          <div shopify-loading-placeholder style="display: flex; gap: 14px;">
+            <div class="loading-card"><div class="loading-card-img"></div><div class="loading-card-text"></div><div class="loading-card-price"></div></div>
+            <div class="loading-card"><div class="loading-card-img"></div><div class="loading-card-text"></div><div class="loading-card-price"></div></div>
+            <div class="loading-card"><div class="loading-card-img"></div><div class="loading-card-text"></div><div class="loading-card-price"></div></div>
+            <div class="loading-card"><div class="loading-card-img"></div><div class="loading-card-text"></div><div class="loading-card-price"></div></div>
+            <div class="loading-card"><div class="loading-card-img"></div><div class="loading-card-text"></div><div class="loading-card-price"></div></div>
+          </div>
+        </shopify-list-context>
+      </div>
+      <button class="scroll-arrow" onclick="scrollFav()" aria-label="Scroll right">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- Shop by Occasion -->
+  <section class="section-occasion reveal">
+    <div class="section-head">
+      <span class="label">Shop by Occasion</span>
+    </div>
+    <div class="occasion-grid">
+      <div class="occasion-card" onclick="navigate('screen-listing')">
+        <img class="occ-img" src="../images/occasion-workday.png" alt="Work Day Wear" width="400" height="400" loading="lazy">
+        <div class="occ-overlay"><span class="occ-label">Work Day<br>Wear</span></div>
+      </div>
+      <div class="occasion-card" onclick="navigate('screen-listing')">
+        <img class="occ-img" src="../images/occasion-festive.png" alt="Festive Season" width="400" height="400" loading="lazy">
+        <div class="occ-overlay"><span class="occ-label">Festive<br>Season</span></div>
+      </div>
+      <div class="occasion-card" onclick="navigate('screen-listing')">
+        <img class="occ-img" src="../images/occasion-weekend.png" alt="Weekend Easy" width="400" height="400" loading="lazy">
+        <div class="occ-overlay"><span class="occ-label">Weekend<br>Easy</span></div>
+      </div>
+      <div class="occasion-card" onclick="navigate('screen-listing')">
+        <img class="occ-img" src="../images/occasion-gift.png" alt="Gift with Love" width="400" height="400" loading="lazy">
+        <div class="occ-overlay"><span class="occ-label">Gift with<br>Love</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Strip -->
+  <div class="footer-strip reveal">
+    <span class="footer-strip-left">Every piece is handcrafted. No two are exactly alike.</span>
+    <button class="footer-strip-link" onclick="navigate('screen-listing')">SEE ALL STYLES →</button>
+  </div>
+
+  <!-- Full Footer -->
+  <footer class="footer-full">
+    <div class="footer-brand">Shades of You</div>
+    <p class="footer-tagline">Handcrafted ethnic wear rooted in tradition, designed for modern living.</p>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="footer-col-title">Shop</div>
+        <a href="#" onclick="navigate('screen-listing')">New Arrivals</a>
+        <a href="#" onclick="navigate('screen-listing')">Kurta Sets</a>
+        <a href="#" onclick="navigate('screen-listing')">Dupattas</a>
+        <a href="#" onclick="navigate('screen-listing')">Juttis</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">About</div>
+        <a href="#">Our Story</a>
+        <a href="#">Craft Journal</a>
+        <a href="#">Artisan Network</a>
+        <a href="#">Sustainability</a>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Help</div>
+        <a href="#">Size Guide</a>
+        <a href="#">Shipping & Returns</a>
+        <a href="#">Contact Us</a>
+        <a href="#">FAQs</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 Shades of You. All rights reserved.</div>
+  </footer>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     SCREEN 2: PRODUCT LISTING (Dynamic)
+═══════════════════════════════════════════ -->
+<div class="screen" id="screen-listing">
+  <div class="announce-bar">Free Shipping on Orders Above ₹999 &nbsp;·&nbsp; COD Available</div>
+  <header class="header">
+    <button class="header-back" onclick="navigate('screen-home')" aria-label="Go back">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 12H5M5 12l7 7M5 12l7-7"/></svg>
+    </button>
+    <a class="header-logo" onclick="navigate('screen-home')">Shades of You</a>
+    <div class="header-icons">
+      <button class="header-icon-btn" aria-label="Search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </button>
+      <button class="header-icon-btn" onclick="document.getElementById('main-cart').showModal()" aria-label="Open Cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="listing-hero-title">
+    <h1>All <em>Products</em></h1>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn" id="filter-toggle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+      Filter
+    </button>
+    <div class="filter-divider"></div>
+    <button class="sort-btn" id="sort-toggle">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l4-4 4 4M7 5v14M21 15l-4 4-4-4M17 19V5"/></svg>
+      Sort
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
+
+  <div class="product-grid pb-nav" id="product-listing-grid">
+    <shopify-list-context type="product" query="products" first="12">
+      <template>
+        <div class="product-grid-card" onclick="showProductDetails(event)">
+          <div class="grid-card-img-wrap">
+            <shopify-media width="400" height="533" query="product.selectedOrFirstAvailableVariant.image"></shopify-media>
+          </div>
+          <div class="grid-card-info">
+            <div class="grid-card-name">
+              <shopify-data query="product.title"></shopify-data>
+            </div>
+            <div class="grid-card-price">
+              <shopify-money query="product.selectedOrFirstAvailableVariant.price"></shopify-money>
+            </div>
+          </div>
+        </div>
+      </template>
+      <!-- Loading placeholders for grid -->
+      <div shopify-loading-placeholder style="display: contents;">
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+        <div class="loading-grid-card"><div class="loading-grid-img"></div><div class="loading-grid-info"><div class="loading-grid-text"></div><div class="loading-grid-price-bar"></div></div></div>
+      </div>
+    </shopify-list-context>
+  </div>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="bottom-nav-item active" onclick="navigate('screen-home')" aria-label="Home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </button>
+    <button class="bottom-nav-item" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search
+    </button>
+    <button class="bottom-nav-item" onclick="document.getElementById('main-cart').showModal()" aria-label="Cart">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Cart
+    </button>
+    <button class="bottom-nav-item" aria-label="Profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </button>
+  </nav>
+</div>
+
+
+<script>
+  /* ════════════════════════════════════════════
+     SHOPIFY INTEGRATION HELPERS
+  ════════════════════════════════════════════ */
+
+  // Open product detail modal from any product context
+  function showProductDetails(event) {
+    document.getElementById('product-modal-context').update(event);
+    document.getElementById('product-modal').showModal();
+  }
+
+  /* ── Navigation History ── */
+  let navHistory = ['screen-home'];
+
+  function navigate(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(screenId);
+    if (target) {
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      navHistory.push(screenId);
+      initRevealAnimations();
+    }
+  }
+
+  function navigateBack() {
+    if (navHistory.length > 1) {
+      navHistory.pop();
+      const prev = navHistory[navHistory.length - 1];
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(prev);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      }
+    }
+  }
+
+  /* ── Menu ── */
+  function openMenu() {
+    document.getElementById('menu-overlay').classList.add('open');
+    document.getElementById('slide-menu').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.getElementById('slide-menu').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ── Toast ── */
+  function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('visible');
+    setTimeout(() => toast.classList.remove('visible'), 2500);
+  }
+
+  /* ── Scroll Favourites Arrow ── */
+  function scrollFav() {
+    const row = document.getElementById('fav-scroll');
+    row.scrollBy({ left: 170, behavior: 'smooth' });
+  }
+
+  /* ── Scroll Reveal ── */
+  function initRevealAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      if (!el.classList.contains('visible')) {
+        observer.observe(el);
+      }
+    });
+  }
+
+  /* ── Init ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    initRevealAnimations();
+
+    // Smooth header shadow on scroll
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY;
+      const headers = document.querySelectorAll('.header');
+      headers.forEach(h => {
+        if (scrollY > 40) {
+          h.style.boxShadow = '0 4px 30px rgba(55,38,25,0.08)';
+        } else {
+          h.style.boxShadow = '0 40px 40px rgba(55,38,25,0.04)';
+        }
+      });
+    }, { passive: true });
+  });
+</script>
+
+</body>
+</html>

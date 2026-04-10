@@ -1,49 +1,155 @@
-<nav class="nav" id="siteNav">
-  <div class="nav__inner">
-    <button class="nav__hamburger" aria-label="Menu" aria-expanded="false" aria-controls="MobileNav">
-      <span class="hamburger"></span>
-    </button>
+<style>
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    padding: var(--gutter) 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(55,38,25,0.08); /* Adjusted for theme compatibility */
+    transition: box-shadow 0.3s ease;
+  }
+  .header-logo {
+    font-family: var(--font-heading);
+    font-size: 21px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    color: var(--primary);
+    text-decoration: none;
+    user-select: none;
+    transition: opacity 0.2s;
+  }
+  .header-logo:hover { opacity: 0.7; }
+  .header-icons { display: flex; gap: 18px; align-items: center; }
+  .header-icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--primary); padding: 6px; display: flex;
+    text-decoration: none;
+    font-size: 18px; line-height: 1;
+    transition: opacity 0.2s;
+    position: relative;
+  }
+  .header-icon-btn:hover { opacity: 0.6; }
 
-    <div class="nav__left">
-      {%- for link in section.settings.menu_left.links -%}
-        <a href="{{ link.url }}" class="nav__link{% if link.active %} active-link{% endif %}">{{ link.title }}</a>
-      {%- endfor -%}
-    </div>
+  /* ── SLIDE-IN MENU ── */
+  .menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(59,35,20,0.4);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .menu-overlay.open { opacity: 1; pointer-events: all; }
+  .slide-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 300px;
+    background: var(--surface);
+    z-index: 201;
+    transform: translateX(-100%);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    padding: 64px 24px;
+    overflow-y: auto;
+  }
+  .slide-menu.open { transform: translateX(0); }
+  .menu-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--primary);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+  }
+  .menu-close:hover { opacity: 1; }
+  .menu-brand {
+    font-family: var(--font-heading);
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 48px;
+    color: var(--primary);
+  }
+  .menu-link {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--primary);
+    text-decoration: none;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--outline-ghost);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .menu-link:hover { opacity: 0.6; }
+  .menu-link:first-of-type { border-top: 1px solid var(--outline-ghost); }
+</style>
 
-    <a class="nav__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}">
-      {%- if section.settings.logo != blank -%}
-        {{ section.settings.logo | image_url: width: 200 | image_tag: alt: shop.name, loading: 'eager' }}
-      {%- else -%}
-        Shades <em>of</em> You
-      {%- endif -%}
+<header class="header" id="siteHeader">
+  <button class="header-icon-btn" id="menu-toggle" onclick="openMenu()" aria-label="Open menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  
+  <a href="{{ routes.root_url }}" class="header-logo" aria-label="{{ shop.name }}">
+    {%- if section.settings.logo != blank -%}
+      {{ section.settings.logo | image_url: width: 200 | image_tag: alt: shop.name, loading: 'eager' }}
+    {%- else -%}
+      Shades of You
+    {%- endif -%}
+  </a>
+
+  <div class="header-icons">
+    <a href="{{ routes.search_url }}" class="header-icon-btn" aria-label="Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     </a>
-
-    <div class="nav__right">
-      {%- for link in section.settings.menu_right.links -%}
-        <a href="{{ link.url }}" class="nav__link{% if link.active %} active-link{% endif %}">{{ link.title }}</a>
-      {%- endfor -%}
-
-      <a href="{{ routes.search_url }}" class="nav__icon" aria-label="Search">
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M11.5 11.5L15 15" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-      </a>
-      <a href="{{ routes.cart_url }}" class="nav__icon" aria-label="Cart">
-        <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M3 1.5H1M3 1.5L5.5 11.5H14.5L16 5H4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="14.5" r="1" fill="currentColor"/><circle cx="13" cy="14.5" r="1" fill="currentColor"/></svg>
-        <span class="nav__cart-count{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-count>{{ cart.item_count }}</span>
-      </a>
-    </div>
+    <a href="{{ routes.cart_url }}" class="header-icon-btn" aria-label="Open Cart">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      <span class="cart-badge {% if cart.item_count > 0 %}visible{% endif %}" style="
+        position: absolute; top: 0; right: 0; width: 16px; height: 16px;
+        background: var(--accent); color: #fff; font-size: 9px; font-weight: 700;
+        border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        pointer-events: none; transition: opacity 0.3s;
+        {% if cart.item_count == 0 %}opacity: 0;{% endif %}
+      ">{{ cart.item_count }}</span>
+    </a>
   </div>
+</header>
+
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<nav class="slide-menu" id="slide-menu">
+  <button class="menu-close" onclick="closeMenu()">✕</button>
+  <div class="menu-brand">{{ shop.name }}</div>
+  {%- for link in section.settings.menu_left.links -%}
+    <a href="{{ link.url }}" class="menu-link" onclick="closeMenu()">{{ link.title }}</a>
+  {%- endfor -%}
+  {%- for link in section.settings.menu_right.links -%}
+    <a href="{{ link.url }}" class="menu-link" onclick="closeMenu()">{{ link.title }}</a>
+  {%- endfor -%}
 </nav>
 
-<nav class="mobile-nav" id="MobileNav" aria-label="Mobile navigation">
-  <ul class="mobile-nav__list" role="list">
-    {%- for link in section.settings.menu_left.links -%}
-      <li><a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a></li>
-    {%- endfor -%}
-    {%- for link in section.settings.menu_right.links -%}
-      <li><a href="{{ link.url }}" class="mobile-nav__link">{{ link.title }}</a></li>
-    {%- endfor -%}
-  </ul>
-</nav>
+<script>
+  function openMenu() {
+    document.getElementById('menu-overlay').classList.add('open');
+    document.getElementById('slide-menu').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    document.getElementById('menu-overlay').classList.remove('open');
+    document.getElementById('slide-menu').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+</script>
 
 {% schema %}
 {
@@ -59,14 +165,13 @@
     {
       "type": "link_list",
       "id": "menu_left",
-      "label": "Left navigation menu",
+      "label": "Primary navigation menu",
       "default": "main-menu"
     },
     {
       "type": "link_list",
       "id": "menu_right",
-      "label": "Right navigation menu",
-      "info": "Links shown to the right of the logo (e.g. Shop All, About, Contact)"
+      "label": "Secondary navigation menu"
     }
   ]
 }
